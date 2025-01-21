@@ -2,7 +2,6 @@
 
 public class Terminal
 {
-	
 	public string TerminalName { get; set; }
 	public Dictionary<string,Airline> Airlines { get; set; }
 	public Dictionary<string, Flight> Flights { get; set; }
