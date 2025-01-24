@@ -1,4 +1,11 @@
-﻿using System;
+﻿// ===========================
+// Student Number: S10268119C
+// Student Name: Joyce Lim
+// Partner Name: Kang Qi Xuan
+// ===========================
+
+
+using System;
 
 public class BoardingGate
 {
