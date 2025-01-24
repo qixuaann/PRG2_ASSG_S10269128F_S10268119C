@@ -15,6 +15,7 @@ public class BoardingGate
     public bool SupportsLWTT{ get; set; }
     public Flight Flight { get; set; }
 
+    public BoardingGate() { };
 
     public BoardingGate(string gn, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
 	{
