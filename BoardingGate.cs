@@ -15,8 +15,6 @@ public class BoardingGate
     public bool SupportsLWTT{ get; set; }
     public Flight Flight { get; set; }
 
-    public BoardingGate() { };
-
     public BoardingGate(string gn, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
 	{
         GateName = gn;
@@ -29,11 +27,11 @@ public class BoardingGate
 
     public double CalculateFees()
     {
-        double baseFee = 300; 
-        if (Flight is CFFTFlight) baseFee += 150;
-        if (Flight is DDJBFlight) baseFee += 300;
-        if (Flight is LWTTFlight) baseFee += 500;
-        return baseFee;
+        if (Flight == null)
+            return 0;
+        double baseFee = 300;
+        double flightFees = Flight.CalculateFees();
+        return baseFee + flightFees;
     }
 
     public override string ToString()

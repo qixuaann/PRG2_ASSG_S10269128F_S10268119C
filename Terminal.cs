@@ -14,8 +14,6 @@ public class Terminal
 	public Dictionary<string, BoardingGate> BoardingGates { get; set; }
 	public Dictionary<string, double> GateFees { get; set; }
 
-    public Terminal() { };
-
 	public Terminal(string t)
 	{
 		TerminalName = t;
@@ -27,9 +25,9 @@ public class Terminal
 
     public bool AddAirline(Airline airline)
     {
-        if (!Airlines.ContainsKey(airline.Name))
+        if (!Airlines.ContainsKey(airline.Code))
         {
-            Airlines.Add(airline.Name, airline);
+            Airlines.Add(airline.Code, airline);
             return true;
         }
         return false;

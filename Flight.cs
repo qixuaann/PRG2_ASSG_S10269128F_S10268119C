@@ -9,11 +9,11 @@ using System;
 public class Flight	
 {
     //attributes - capitalized since its in public form (class diagram is in private form) 
-    public string flightNumber { get; set; }
-    public string origin { get; set; }
-    public string destination { get; set; }
-    public DateTime expectedTime { get; set; }
-    public string status { get; set; } = "On Time"; // default as stated
+    public string FlightNumber { get; set; }
+    public string Origin { get; set; }
+    public string Destination { get; set; }
+    public DateTime ExpectedTime { get; set; }
+    public string Status { get; set; } = "On Time"; // default as stated
 
 
     //constructor
@@ -22,8 +22,7 @@ public class Flight
         FlightNumber = flightNumber;
         Origin = origin;
         Destination = destination;
-        ExpectedTime = expectedTime;
-	}
+        ExpectedTime = expectedTime;	}
 
     // method
     public virtual double CalculateFees()
@@ -54,7 +53,7 @@ public class NORMFlight : Flight
 {
     //constructor
     public NORMFlight(string flightNumber, string origin, string destination, DateTime expectedTime)
-        : base(flightNumber, origin, destination, expectedTime) { }  // removed status
+        : base(flightNumber, origin, destination, expectedTime) { } 
 
     //method
     public override double CalculateFees()
@@ -87,13 +86,16 @@ public class CFFTFlight : Flight
     public double RequestFee { get; set; }
 
     //constructor
-    public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime)
-        : base(flightNumber, origin, destination, expectedTime) {} //removed status, requestFee
 
+    public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string requestFee)
+        : base(flightNumber, origin, destination, expectedTime)
+    {
+        RequestFee = 150; 
+    }
     //method
     public override double CalculateFees()
     {
-        return base.CalculateFees() + 150; // additional fee, see table 6
+        return base.CalculateFees() + RequestFee; // additional fee, see table 6
     }
     
     public override string ToString()
@@ -109,13 +111,16 @@ public class DDJBFlight : Flight
     public double RequestFee { get; set; }
 
     //constructor
-    public DDJBFlight(string flightNumber, string origin, string destination, DateTime expectedTime)
-        : base(flightNumber, origin, destination, expectedTime) { } //removed status, requestFee
+    public DDJBFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string requestFee)
+        : base(flightNumber, origin, destination, expectedTime)
+    {
+        RequestFee = 300;
+    }
 
     //method
     public override double CalculateFees()
     {
-        return base.CalculateFees() + 300; // additional fee, see table 6
+        return base.CalculateFees() + RequestFee; // additional fee, see table 6
     }
 
     public override string ToString()
@@ -132,13 +137,16 @@ public class LWTTFlight : Flight
     public double RequestFee { get; set; }
 
     //constructor
-    public LWTTFlight(string flightNumber, string origin, string destination, DateTime expectedTime)
-        : base(flightNumber, origin, destination, expectedTime) { } //removed status, requestFee
+    public LWTTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string requestFee)
+        : base(flightNumber, origin, destination, expectedTime)
+    {
+        RequestFee = 500;
+    }
 
     //method
     public override double CalculateFees()
     {
-        return base.CalculateFees() + 500; // additional fee, see table 6
+        return base.CalculateFees() + RequestFee; // additional fee, see table 6
     }
 
     public override string ToString()
