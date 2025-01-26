@@ -3,13 +3,12 @@
 // start of feature 1
 
 // load the airlines.csv file
-string filepath = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv"
+string filepath_airline = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv";
 Dictionary<string, Airline> airlineDict = new Dictionary<string, Airline>();
-MainCall(airlineDict);
 
-void LoadAirlines(string filepath, Dictionary<string, Airline> airlinesDict)
+void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDict)
 {
-    using (StreamReader sr = new StreamReader(filepath))
+    using (StreamReader sr = new StreamReader(filepath_airline))
     {
         string? s = sr.ReadLine();
 
@@ -19,8 +18,8 @@ void LoadAirlines(string filepath, Dictionary<string, Airline> airlinesDict)
             string n = index[0];
             string c = index[1];
 
-            Airline airline = new Airline(n, c)
-            airlinesDict.Add(n, airline); 
+            Airline airline = new Airline(n, c);
+            airlineDict.Add(n, airline); 
         }
     }
 }
@@ -28,13 +27,12 @@ void LoadAirlines(string filepath, Dictionary<string, Airline> airlinesDict)
 // airlines.csv file loaded
 
 // load the boardinggates.csv file
-string filepath = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\boardinggates.csv";
+string filepath_gate = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\boardinggates.csv";
 Dictionary<string, BoardingGate> boardinggateDict = new Dictionary<string, BoardingGate>();
-MainCall(boardinggateDict);
 
-void LoadBoardinggate(string filepath, Dictionary<string, BoardingGate> boardinggateDict)
+void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boardinggateDict)
 {
-    using (StreamReader sr = new StreamReader(filepath))
+    using (StreamReader sr = new StreamReader(filepath_gate))
     {
         string? s = sr.ReadLine();
 
@@ -58,13 +56,12 @@ void LoadBoardinggate(string filepath, Dictionary<string, BoardingGate> boarding
 
 // feature 2 -load flight.csv (flights)
 
-string filepath = "C:\\Users\\joyce\\source\\repos\\PRG2_ASSG_S10269128F_S10268119C\\flights.csv";
+string filepath_flight = "C:\\Users\\joyce\\source\\repos\\PRG2_ASSG_S10269128F_S10268119C\\flights.csv";
 Dictionary<string, Flight> flightDict = new Dictionary<string, Flight>();
-MainCall(flightDict);
 
-void LoadFlights(string filepath, Dictionary<string, Flight> flightDict)
+void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
 {
-    using (StreamReader sr = new StreamReader(filepath))
+    using (StreamReader sr = new StreamReader(filepath_flight))
     {
         string? s = sr.ReadLine();
    
@@ -101,9 +98,13 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
 // --- end of feature 3 ----
 
 // main (options and calling of method)
-void MainCall(Dictionary<string, Flight> flightDict)
+MainCall(flightDict, airlineDict, boardinggateDict);
+
+void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlinesDict, Dictionary<string, BoardingGate> boardinggateDict)
 {
-    LoadFlights(filepath, flightDict);
+    LoadFlights(filepath_flight, flightDict);
+    LoadAirlines(filepath_airline, airlineDict);
+    LoadBoardinggate(filepath_gate, boardinggateDict);
 
     while (true)
     {
