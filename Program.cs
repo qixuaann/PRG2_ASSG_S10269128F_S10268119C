@@ -1,5 +1,61 @@
 ﻿using System.Runtime.CompilerServices;
 
+// start of feature 1
+
+// load the airlines.csv file
+string filepath = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv"
+Dictionary<string, Airline> airlineDict = new Dictionary<string, Airline>();
+MainCall(airlineDict);
+
+void LoadAirlines(string filepath, Dictionary<string, Airline> airlinesDict)
+{
+    using (StreamReader sr = new StreamReader(filepath))
+    {
+        string? s = sr.ReadLine();
+
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] index = s.Split(',');
+            string n = index[0];
+            string c = index[1];
+
+            Airline airline = new Airline(n, c)
+            airlinesDict.Add(n, airline); 
+        }
+    }
+}
+
+// airlines.csv file loaded
+
+// load the boardinggates.csv file
+string filepath = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\boardinggates.csv";
+Dictionary<string, BoardingGate> boardinggateDict = new Dictionary<string, BoardingGate>();
+MainCall(boardinggateDict);
+
+void LoadBoardinggate(string filepath, Dictionary<string, BoardingGate> boardinggateDict)
+{
+    using (StreamReader sr = new StreamReader(filepath))
+    {
+        string? s = sr.ReadLine();
+
+        while ((s = sr.ReadLine()) != null)
+        {
+            string[] values = s.Split(',');
+            string gateNumber = values[0];
+            bool DJJB = bool.Parse(values[1]);
+            bool CFFT = bool.Parse(values[2]);
+            bool LWWT = bool.Parse(values[3]);
+
+            BoardingGate gate = new BoardingGate(gateNumber, DJJB, CFFT, LWWT);
+            boardingGateDict.Add(gateNumber, gate);
+        }
+    }
+}
+
+// boardinggates.csv file loaded 
+
+// end of feature 1
+
 // feature 2 -load flight.csv (flights)
 
 string filepath = "C:\\Users\\joyce\\source\\repos\\PRG2_ASSG_S10269128F_S10268119C\\flights.csv";

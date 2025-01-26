@@ -22,7 +22,8 @@ public class Flight
         FlightNumber = flightNumber;
         Origin = origin;
         Destination = destination;
-        ExpectedTime = expectedTime;	}
+        ExpectedTime = expectedTime;	
+    }
 
     // method
     public virtual double CalculateFees()
