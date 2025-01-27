@@ -3,7 +3,7 @@
 // start of feature 1
 
 // load the airlines.csv file
-string filepath_airline = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv";
+string filepath_airline = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/airlines.csv";
 Dictionary<string, Airline> airlineDict = new Dictionary<string, Airline>();
 
 void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDict)
@@ -27,7 +27,7 @@ void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDi
 // airlines.csv file loaded
 
 // load the boardinggates.csv file
-string filepath_gate = "C:\\Users\\Qi Xuan\\source\\repos\\qixuaann\\PRG2_ASSG_S10269128F_S10268119C\\boardinggates.csv";
+string filepath_gate = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/boardinggates.csv";
 Dictionary<string, BoardingGate> boardinggateDict = new Dictionary<string, BoardingGate>();
 
 void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boardinggateDict)
@@ -45,7 +45,7 @@ void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boa
             bool LWWT = bool.Parse(values[3]);
 
             BoardingGate gate = new BoardingGate(gateNumber, DJJB, CFFT, LWWT);
-            boardingGateDict.Add(gateNumber, gate);
+            boardinggateDict.Add(gateNumber, gate);
         }
     }
 }
@@ -56,7 +56,7 @@ void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boa
 
 // feature 2 -load flight.csv (flights)
 
-string filepath_flight = "C:\\Users\\joyce\\source\\repos\\PRG2_ASSG_S10269128F_S10268119C\\flights.csv";
+string filepath_flight = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/flights.csv";
 Dictionary<string, Flight> flightDict = new Dictionary<string, Flight>();
 
 void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
