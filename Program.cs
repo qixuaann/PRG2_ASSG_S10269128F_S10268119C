@@ -86,13 +86,15 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Flights for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
-    Console.WriteLine("{0,-16} {1,-16} {2,-20} {3,-21} {4,-21}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
+    Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
     foreach (var kvp in flightDict)
     {
         var flight = kvp.Value;
+        foreach (var kvp2 in airlineDict) {
+            var airline = kvp2.Value;
+            Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, airline.Name, flight.Origin, flight.Destination, flight.ExpectedTime);
 
-        // add airline name after qx loads data from airlines.csv
-        Console.WriteLine("{0,-16} {1,-16} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, "Empty for now", flight.Origin, flight.Destination, flight.ExpectedTime);
+        }
     }
 }
 // --- end of feature 3 ----
