@@ -102,6 +102,9 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
 // feature 5 - assign a boarding gate to a flight
 void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict)
 {
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Assign a Boarding Gate to a Flight");
+    Console.WriteLine("=============================================");
     Console.WriteLine("Enter Flight Number:");
     string flightNo = Console.ReadLine();
     Console.WriteLine("Enter Boarding Gate Name:");
