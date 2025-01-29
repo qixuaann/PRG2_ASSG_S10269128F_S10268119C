@@ -153,6 +153,39 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
 }
 // --- end of feature 5 ----
 
+// feature 6 - create a new flight
+void CreateFlight(Dictionary<string, Flight> flightDict) 
+{
+    while (true) 
+    {
+        Console.Write("Enter Flight Number: ");
+        string flightNo = Console.ReadLine();
+        Console.Write("Enter Origin: ");
+        string origin = Console.ReadLine();
+        Console.Write("Enter Destination: ");
+        string destination = Console.ReadLine();
+        Console.Write("Enter Expected Departure/Arrival Time (dd/m/yyyy hh:mm): ");
+        DateTime time = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy HH:mm", null);
+        Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
+        string requestCode = Console.ReadLine();
+        // will figure out where to store code
+        Flight newFlight = new Flight(flightNo, origin, destination, time);
+        flightDict.Add(flightNo, newFlight);
+        Console.WriteLine($"Flight {flightNo} has been added!");
+        Console.WriteLine("Would you like to add another flight? (Y/N)");
+        string permission = Console.ReadLine();
+        if (permission == "N")
+        {
+            break;
+        }
+        else 
+        {
+            continue;
+        }
+    }
+}
+// --- end of feature 6 ----
+
 // main (options and calling of method)
 MainCall(flightDict, airlineDict, boardinggateDict);
 
@@ -186,6 +219,11 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         else if (option  == "3") 
         {
             AssignGateToFlight(flightDict, boardinggateDict);
+            Console.WriteLine();
+        }
+        else if (option == "4")
+        {
+            CreateFlight(flightDict);
             Console.WriteLine();
         }
         else if (option == "0")
