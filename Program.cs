@@ -99,6 +99,57 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
 }
 // --- end of feature 3 ----
 
+// feature 5 - assign a boarding gate to a flight
+void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict)
+{
+    Console.WriteLine("Enter Flight Number:");
+    string flightNo = Console.ReadLine();
+    Console.WriteLine("Enter Boarding Gate Name:");
+    string gateName = Console.ReadLine();
+
+    if (!flightDict.ContainsKey(flightNo))
+    {
+        Console.WriteLine("Flight number not found.");
+        return;
+    }
+
+    Flight flight = flightDict[flightNo];
+    // need add \nSpecial Request Code: 
+    Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}");
+
+    if (!boardinggateDict.ContainsKey(gateName))
+    {
+        Console.WriteLine("Boarding gate name not found.");
+        return;
+    }
+
+    BoardingGate selectedGate = boardinggateDict[gateName];
+
+    if (selectedGate.Flight != null)
+    {
+        Console.WriteLine($"Boarding Gate {gateName} is already assigned to another flight.");
+        return;
+    }
+
+    Console.WriteLine($"Boarding Gate Name: {selectedGate.GateName}\nSupports DDJB: {selectedGate.SupportsDDJB}\nSupports CFFT: {selectedGate.SupportsCFFT}\nSupports LWTT: {selectedGate.SupportsLWTT}");
+    Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+    string status = Console.ReadLine();
+    if (status == "Y")
+    {
+        Console.WriteLine("1. Delayed\n2. Boarding\n3. On Time");
+        Console.WriteLine("Please select the new status of the flight:");
+        string newStatus = Console.ReadLine();
+        flight.Status = newStatus;
+        Console.WriteLine($"Flight {flightNo} has been assigned to Boarding Gate {gateName}\n!");
+    }
+    else if (status == "N")
+    {
+        flight.Status = "On Time";
+        Console.WriteLine($"Status of the flight will be set to default of {"On Time"}\n");
+    }
+}
+// --- end of feature 5 ----
+
 // main (options and calling of method)
 MainCall(flightDict, airlineDict, boardinggateDict);
 
@@ -127,6 +178,11 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         if (option == "1")
         {
             DisplayFlights(flightDict);
+            Console.WriteLine();
+        }
+        else if (option  == "3") 
+        {
+            AssignGateToFlight(flightDict, boardinggateDict);
             Console.WriteLine();
         }
         else if (option == "0")
