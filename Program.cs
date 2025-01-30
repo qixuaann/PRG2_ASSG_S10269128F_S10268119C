@@ -3,11 +3,7 @@
 // start of feature 1
 
 // load the airlines.csv file
-<<<<<<< HEAD
 string filepath_airline = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv";
-=======
-string filepath_airline = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/airlines.csv";
->>>>>>> a1d5512bfb5dcb95e55ae42d57c845fab83e13e2
 Dictionary<string, Airline> airlineDict = new Dictionary<string, Airline>();
 
 void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDict)
@@ -31,11 +27,7 @@ void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDi
 // airlines.csv file loaded
 
 // load the boardinggates.csv file
-<<<<<<< HEAD
 string filepath_gate = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\boardinggates.csv";
-=======
-string filepath_gate = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/boardinggates.csv";
->>>>>>> a1d5512bfb5dcb95e55ae42d57c845fab83e13e2
 Dictionary<string, BoardingGate> boardinggateDict = new Dictionary<string, BoardingGate>();
 
 void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boardinggateDict)
@@ -64,11 +56,7 @@ void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boa
 
 // feature 2 -load flight.csv (flights)
 
-<<<<<<< HEAD
 string filepath_flight = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\flights.csv";
-=======
-string filepath_flight = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/flights.csv";
->>>>>>> a1d5512bfb5dcb95e55ae42d57c845fab83e13e2
 Dictionary<string, Flight> flightDict = new Dictionary<string, Flight>();
 
 void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
@@ -110,6 +98,20 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
     }
 }
 // --- end of feature 3 ----
+
+// feature 4 - list all boarding gates 
+void DisplayBoardinggates (Dictionary<string, BoardingGate> boardinggateDict)
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21}", "Gate Name", "DDJB", "CFFT", "LWTT");
+    foreach (var boardinggateEntry in boardinggateDict)
+    {
+        var boardinggate = boardinggateEntry.Value;
+        Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", boardinggate.GateName, boardinggate.SupportsDDJB, boardinggate.SupportsCFFT, boardinggate.SupportsLWTT);
+    }
+}
 
 // feature 5 - assign a boarding gate to a flight
 void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict)
@@ -198,6 +200,10 @@ void CreateFlight(Dictionary<string, Flight> flightDict)
 }
 // --- end of feature 6 ----
 
+// feature 7 - display full flight details from an airline
+
+// feature 8 - modify flight details
+
 // main (options and calling of method)
 MainCall(flightDict, airlineDict, boardinggateDict);
 
@@ -226,6 +232,11 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         if (option == "1")
         {
             DisplayFlights(flightDict);
+            Console.WriteLine();
+        }
+        else if (option == "2")
+        {
+            DisplayBoardinggates(boardinggateDict);
             Console.WriteLine();
         }
         else if (option  == "3") 
