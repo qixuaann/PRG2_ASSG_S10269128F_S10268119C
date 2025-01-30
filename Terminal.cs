@@ -57,9 +57,40 @@ public class Terminal
 
     public void PrintAirlineFees()
 	{
-        foreach (var airline in Airlines.Values)
+        foreach (var airlineEntry in Airlines)
         {
-            Console.WriteLine($"Airline: {airline.Name}\t Total Fees: {airline.CalculateFees():C}");
+            Airline airline = airlineEntry.Value;
+            double totalFees = 0;
+            double discount = 0;
+
+            foreach (var flight in airline.Flights.Values)
+            {
+                totalFees += flight.CalculateFees();
+
+                if (flight.ExpectedTime.Hour < 11 || flight.ExpectedTime.Hour >= 21)
+                {
+                    discount += 110;
+                }
+                if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" || flight.Origin == "Tokyo (NRT)")
+                {
+                    discount += 25;
+                }
+                if (string.IsNullOrEmpty(flight.Status))
+                {
+                    discount += 50;
+                }
+            }
+
+            int flightCount = airline.Flights.Count;
+            discount += (flightCount/3) * 350;
+            if (flightCount > 5) 
+            {
+                discount += totalFees * 0.03; // discount off base fee
+            }
+            
+            double finalFee = totalFees - discount;
+
+            Console.WriteLine($"Airline: {airline.Name}\t Total Base Fees: {totalFees:C2}\t Total Discount: {discount:C2}\t Final Fee: {finalFee:C2} ");
         }
     }
 
