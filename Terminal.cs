@@ -14,6 +14,7 @@ public class Terminal
 	public Dictionary<string, BoardingGate> BoardingGates { get; set; }
 	public Dictionary<string, double> GateFees { get; set; }
 
+    public Terminal() {}
 	public Terminal(string t)
 	{
 		TerminalName = t;

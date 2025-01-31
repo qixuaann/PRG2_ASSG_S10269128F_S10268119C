@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Windows.Markup;
 
 // start of feature 1
@@ -136,7 +137,6 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
     }
 
     Flight flight = flightDict[flightNo];
-    // need add \nSpecial Request Code: 
     foreach (var kvp in requestCodeDict)
     {
         string flightID = kvp.Key;
@@ -185,7 +185,7 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
 // --- end of feature 5 ----
 
 // feature 6 - create a new flight
-void CreateFlight(Dictionary<string, Flight> flightDict) 
+void CreateFlight(Dictionary<string, Flight> flightDict, Dictionary<string, string> requestCodeDict) 
 {
     while (true) 
     {
@@ -199,9 +199,9 @@ void CreateFlight(Dictionary<string, Flight> flightDict)
         DateTime time = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy HH:mm", null);
         Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
         string requestCode = Console.ReadLine();
-        // will figure out where to store code
         Flight newFlight = new Flight(flightNo, origin, destination, time);
         flightDict.Add(flightNo, newFlight);
+        requestCodeDict.Add(flightNo, requestCode);
         Console.WriteLine($"Flight {flightNo} has been added!");
         Console.WriteLine("Would you like to add another flight? (Y/N)");
         string permission = Console.ReadLine();
@@ -223,7 +223,8 @@ void CreateFlight(Dictionary<string, Flight> flightDict)
 
 // feature 9 - display scheduled flights in chronological order
 // with boarding gates assignments where applicable 
-void DisplayScheduledFlights(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict, Dictionary<string, Airline> airlineDict)
+
+void DisplayScheduledFlights(Terminal terminal, Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlineDict)
 {
 
     Console.WriteLine("=============================================");
@@ -239,29 +240,41 @@ void DisplayScheduledFlights(Dictionary<string, Flight> flightDict, Dictionary<s
     List<Flight> flightList = flightDict.Values.ToList();
 
     flightList.Sort();
-    Dictionary<string, Flight> sortedFlightDict = new Dictionary<string, Flight>();
+    
+    Dictionary<string, string> predefinedGates = new Dictionary<string, string>
+    {
+        { "SQ 693", "A13" },
+        { "MH 722", "B2" },
+        { "CX 312", "C22" }
+    };   
+
+    Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21} {5,-21} {6,-21}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time", "Status", "Boarding Gate");
+   
     foreach (var flight in flightList)
     {
-        sortedFlightDict[flight.FlightNumber] = flight;
-    }
+        Airline airline = terminal.GetAirlineFromFlight(flight); 
 
-    Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21} {5,-21}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time", "Status");
-    foreach (var kvp in sortedFlightDict)
-    {
-        var flight = kvp.Value;
-        foreach (var kvp2 in airlineDict) {
-            var airline = kvp2.Value;
-            Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21} {5, -21}", flight.FlightNumber, airline.Name, flight.Origin, flight.Destination, flight.ExpectedTime, flight.Status);
+        string assignedGate;
+        if (predefinedGates.ContainsKey(flight.FlightNumber))
+        {
+            assignedGate = "Assigned";
         }
+        else {
+            assignedGate = "Unassigned";
+        }
+       
+        Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21} {5,-21} {6,-21}",
+                    flight.FlightNumber, airline.Name, flight.Origin, flight.Destination,
+                    flight.ExpectedTime, flight.Status, assignedGate);
     }
-    
 }
+
 // --- end of feature 9 ----
 
 // main (options and calling of method)
 MainCall(flightDict, airlineDict, boardinggateDict);
 
-void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlinesDict, Dictionary<string, BoardingGate> boardinggateDict)
+void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlineDict, Dictionary<string, BoardingGate> boardinggateDict)
 {
     LoadFlights(filepath_flight, flightDict);
     LoadAirlines(filepath_airline, airlineDict);
@@ -300,13 +313,25 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         }
         else if (option == "4")
         {
-            CreateFlight(flightDict);
+            CreateFlight(flightDict, requestCodeDict);
             Console.WriteLine();
         }
-        else if (option == "7")
-        {
-            DisplayScheduledFlights(flightDict, boardinggateDict, airlineDict);
-        }
+        // else if (option == "7")
+        // {
+        //     Terminal terminal = new Terminal();
+
+        //     // load data, fixing terminal initialization
+        //     terminal.Airlines = new Dictionary<string, Airline>();  
+        //     terminal.BoardingGates = new Dictionary<string, BoardingGate>();  
+        //     terminal.Flights = new Dictionary<string, Flight>();  
+        //     LoadAirlines(filepath_airline, terminal.Airlines);
+        //     LoadBoardinggate(filepath_gate, terminal.BoardingGates);
+        //     LoadFlights(filepath_flight, terminal.Flights);
+
+        //     DisplayScheduledFlights(terminal, flightDict, airlineDict);  
+        //     Console.WriteLine();
+
+        // }
         else if (option == "0")
         {
             Console.WriteLine("Goodbye!");
