@@ -6,7 +6,7 @@
 
 using System;
 
-public class Flight	
+public class Flight	: IComparable<Flight>
 {
     //attributes - capitalized since its in public form (class diagram is in private form) 
     public string FlightNumber { get; set; }
@@ -43,9 +43,18 @@ public class Flight
         // return 300.00; - base fee for all boarding gates (thats for terminal) 
     }
 
+    public int CompareTo(Flight other)
+    {
+        if (other == null)
+        {
+            return 1;
+        }
+        return this.ExpectedTime.CompareTo(other.ExpectedTime);
+    }
+
     public override string ToString()
     {
-        return $"Flight Number: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected: {ExpectedTime}, Status: {Status}";
+        return $"Flight Number: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected: {ExpectedTime:dd/MM/yyyy h:mm tt}, Status: {Status}";
     }
 }
 
