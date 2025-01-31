@@ -57,7 +57,9 @@ void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boa
 
 // feature 2 -load flight.csv (flights)
 
-string filepath_flight = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/flight.csv";
+Dictionary<string, string> requestCodeDict = new Dictionary<string, string>();
+
+string filepath_flight = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/flights.csv";
 Dictionary<string, Flight> flightDict = new Dictionary<string, Flight>();
 
 void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
@@ -65,7 +67,7 @@ void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
     using (StreamReader sr = new StreamReader(filepath_flight))
     {
         string? s = sr.ReadLine();
-   
+    
         while ((s = sr.ReadLine()) != null)
         {
             string[] values = s.Split(',');
@@ -77,6 +79,7 @@ void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
 
             Flight flight = new Flight(flightNumber, origin, destination, expectedTime);
             flightDict.Add(flightNumber, flight);
+            requestCodeDict.Add(flightNumber,requestCode);
         }
     }
 }
@@ -116,7 +119,7 @@ void DisplayBoardinggates (Dictionary<string, BoardingGate> boardinggateDict)
 }
 
 // feature 5 - assign a boarding gate to a flight
-void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict)
+void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict, Dictionary<string, string> requestCodeDict)
 {
     Console.WriteLine("=============================================");
     Console.WriteLine("Assign a Boarding Gate to a Flight");
@@ -134,10 +137,20 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
 
     Flight flight = flightDict[flightNo];
     // need add \nSpecial Request Code: 
-    LoadFlights(filepath_flight, flightDict);
-    // string requestCode;
-    Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}");
-    // Console.WriteLine($"Special Request Code: {requestCode}");
+    foreach (var kvp in requestCodeDict)
+    {
+        string flightID = kvp.Key;
+        string requestCode = kvp.Value;
+        if (flightID == flight.FlightNumber)
+        {
+            Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}\nSpecial Request Code: {requestCode}");
+        }
+        else 
+        {
+            Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}\nSpecial Request Code: None");
+
+        }
+    }
     if (!boardinggateDict.ContainsKey(gateName))
     {
         Console.WriteLine("Boarding gate name not found.");
@@ -282,7 +295,7 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         }
         else if (option  == "3") 
         {
-            AssignGateToFlight(flightDict, boardinggateDict);
+            AssignGateToFlight(flightDict, boardinggateDict, requestCodeDict);
             Console.WriteLine();
         }
         else if (option == "4")

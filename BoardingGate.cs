@@ -10,16 +10,16 @@ using System;
 public class BoardingGate
 {
     public string GateName { get; set; }
-    public bool SupportsCFFT { get; set; }
     public bool SupportsDDJB { get; set; }
+    public bool SupportsCFFT { get; set; }
     public bool SupportsLWTT{ get; set; }
     public Flight Flight { get; set; }
 
-    public BoardingGate(string gn, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
+    public BoardingGate(string gn, bool supportsDDJB, bool supportsCFFT, bool supportsLWTT)
 	{
         GateName = gn;
-        SupportsCFFT = supportsCFFT;
         SupportsDDJB = supportsDDJB;
+        SupportsCFFT = supportsCFFT;
         SupportsLWTT = supportsLWTT;
         // since there is not flight assigned yet
         Flight = null; 
