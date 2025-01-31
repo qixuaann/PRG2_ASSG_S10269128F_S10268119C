@@ -93,7 +93,6 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
         foreach (var kvp2 in airlineDict) {
             var airline = kvp2.Value;
             Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, airline.Name, flight.Origin, flight.Destination, flight.ExpectedTime);
-
         }
     }
 }
@@ -109,9 +108,10 @@ void DisplayBoardinggates (Dictionary<string, BoardingGate> boardinggateDict)
     foreach (var boardinggateEntry in boardinggateDict)
     {
         var boardinggate = boardinggateEntry.Value;
-        Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", boardinggate.GateName, boardinggate.SupportsDDJB, boardinggate.SupportsCFFT, boardinggate.SupportsLWTT);
+        Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21}", boardinggate.GateName, boardinggate.SupportsDDJB, boardinggate.SupportsCFFT, boardinggate.SupportsLWTT);
     }
 }
+// --- end of feature 4 ---
 
 // feature 5 - assign a boarding gate to a flight
 void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string, BoardingGate> boardinggateDict)
@@ -202,6 +202,8 @@ void CreateFlight(Dictionary<string, Flight> flightDict)
 
 // feature 7 - display full flight details from an airline
 
+
+
 // feature 8 - modify flight details
 
 // main (options and calling of method)
@@ -241,7 +243,7 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         }
         else if (option  == "3") 
         {
-            AssignGateToFlight(flightDict, boardinggateDict);
+            DisplayBoardinggates(boardinggateDict);
             Console.WriteLine();
         }
         else if (option == "4")
