@@ -495,6 +495,21 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
 
         Console.Write("Please select your option: ");
         string option = Console.ReadLine();
+        if (option == null)
+        {
+            option = "";
+        }
+        else
+        {
+            option = option.Trim();
+        }
+
+        if (string.IsNullOrWhiteSpace(option))
+        {
+            Console.WriteLine("Input cannot be empty. Please select a valid option.");
+            continue;
+        }
+
         if (option == "1")
         {
             DisplayFlights(terminal, flightDict);
@@ -541,7 +556,7 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         }
         else
         {
-            Console.WriteLine("Invalid");
+            Console.WriteLine("Invalid option. Please select a valid menu option (0-8)");
         }
     }
 }
