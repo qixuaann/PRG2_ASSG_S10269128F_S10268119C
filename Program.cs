@@ -295,12 +295,12 @@ void CreateFlight(Dictionary<string, Flight> flightDict, Dictionary<string, stri
 
 // feature 7 - display full flight details from an airline
 void DisplayFullflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<string, Flight> flightDict)
-{
+{   
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
     Console.WriteLine("{0,-16} {1,-20}", "Airline Code", "Airline Name");
-    
+
     foreach (var flightEntry in airlineDict)
     {
         var flightdetail = flightEntry.Value;
@@ -352,10 +352,116 @@ void DisplayFullflightdetails(Dictionary<string, Airline> airlineDict, Dictionar
 // ---- end of feature 7 ----
 
 // feature 8 - modify flight details
+void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<string, Flight> flightDict)
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("{0,-16} {1,-20}", "Airline Code", "Airline Name");
+
+    foreach (var flightEntry in airlineDict)
+    {
+        var flightdetail = flightEntry.Value;
+        Console.WriteLine("{0,-16} {1,-20}", flightdetail.Code, flightdetail.Name);
+    }
+
+    Console.WriteLine("Enter Airline Code: ");
+    string inputCode = Console.ReadLine().ToUpper();
+
+    if (!airlineDict.ContainsKey(inputCode))
+    {
+        Console.WriteLine("Invalid Airline Code. Please try again.");
+        return;
+    }
+
+    Airline selectedAirline = airlineDict[inputCode];
+    List<Flight> filteredFlights = new List<Flight>();
+
+    foreach (var flightEntry in flightDict)
+    {
+        Flight flight = flightEntry.Value;
+        string airlineCode = flight.FlightNumber.Substring(0, 2);
+
+        if (airlineCode == selectedAirline.Code)
+        {
+            filteredFlights.Add(flight);
+        }
+    }
+
+    Console.WriteLine($"List of Flights for {selectedAirline.Name}");
+    if (filteredFlights.Count > 0)
+    {
+        Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
+
+        foreach (var flight in filteredFlights)
+        {
+            Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, selectedAirline.Name, flight.Origin, flight.Destination, flight.ExpectedTime);
+        }
+
+        Console.WriteLine("Choose an existing Flight to modify or delete:");
+        string inputFlight = Console.ReadLine();
+
+        if (flightDict.ContainsKey(inputFlight))
+        {
+            Console.WriteLine("1. Modify Flight");
+            Console.WriteLine("2. Delete Flight");
+            Console.WriteLine("Choose an option:");
+            int inputChoice = Convert.ToInt32(Console.ReadLine());
+
+            if (inputChoice == 1)
+            {
+                Console.WriteLine("1. Modify Basic Information");
+                Console.WriteLine("2. Modify Status");
+                Console.WriteLine("3. Modify Special Request Code");
+                Console.WriteLine("4. Modify Boarding Gate");
+                Console.WriteLine("Choose an option:");
+                int modifyChoice = Convert.ToInt32(Console.ReadLine());
+                if (modifyChoice == 1)
+                {
+                    Console.Write("Enter new Origin: ");
+                    string newOrigin = Console.ReadLine();
+                    Console.Write("Enter new Destination: ");
+                    string newDestination = Console.ReadLine();
+                    Console.Write("Enter new Expected Departure/Arrival Time (dd/MM/yyyy HH:mm): ");
+                    string newExpectedtime = Console.ReadLine();
+
+                    if (DateTime.TryParseExact(newExpectedtime, "dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime newExpectedTime))
+                    {
+                        flightDict[inputFlight].Origin = newOrigin;
+                        flightDict[inputFlight].Destination = newDestination;
+                        flightDict[inputFlight].ExpectedTime = newExpectedTime;
+
+                        Console.WriteLine("Flight updated!");
+                        Flight updatedFlight = flightDict[inputFlight];
+                        Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
+                        Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
+                        Console.WriteLine($"Origin: {updatedFlight.Origin}");
+                        Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                        Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                        Console.WriteLine($"Status: {updatedFlight.Status}");
+                        Console.WriteLine($"Special Request Code: {updatedFlight.SpecialRequestCode}");
+                        Console.WriteLine($"Boarding Gate: {updatedFlight.BoardingGate}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nInvalid date format. Flight details not updated.");
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid Flight Number.");
+        }
+    }
+    else
+    {
+        Console.WriteLine("No flights available for this airline.");
+    }
+}
 
 // feature 9 - display scheduled flights in chronological order
 // with boarding gates assignments where applicable 
-
 void DisplayScheduledFlights(Terminal terminal, Dictionary<string, Flight> flightDict, Dictionary<string,string> requestCodeDict)
 {
 
@@ -422,8 +528,8 @@ void DisplayScheduledFlights(Terminal terminal, Dictionary<string, Flight> fligh
        
     }
 }
-
 // --- end of feature 9 ----
+
 // advanced feature - (b) display the total fee per airline for the day
 // -> Joyce
 void DisplayTotalFeePerAirline(Terminal terminal)
@@ -459,7 +565,6 @@ void DisplayOverallTotals(Terminal terminal)
     Console.WriteLine("=============================================");
     terminal.PrintAirlineFees();
 }
-
 
 // main (options and calling of method)
 MainCall(flightDict, airlineDict, boardinggateDict);
@@ -533,6 +638,10 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         {
             DisplayFullflightdetails(airlineDict, flightDict);
             Console.WriteLine();
+        }
+        else if (option == "6")
+        {
+            Modifyflightdetails(airlineDict, flightDict);
         }
         else if (option == "7")
         {
