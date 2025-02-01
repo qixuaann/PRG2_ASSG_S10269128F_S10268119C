@@ -12,6 +12,7 @@ public class Airline
 	public string Code { get; set; }
     public Dictionary<string, Flight> Flights { get; set; }
 
+    public Airline() {}
     public Airline(string n, string c)
 	{
 		Name = n;
