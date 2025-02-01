@@ -1,4 +1,5 @@
-﻿using System.Net.NetworkInformation;
+﻿using System.Collections.Immutable;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Windows.Markup;
 
@@ -83,25 +84,6 @@ void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
 // --- end of feature 2 ----
 
 // validations 
-bool IsValidFlightNumber(string flightNumber)
-{
-    // flight no. should be at least 3 characters (2 letters + numbers)
-    if (flightNumber.Length < 3)
-        return false;
-
-    // first 2 characters should be letters (airline code)
-    if (!char.IsLetter(flightNumber[0]) || !char.IsLetter(flightNumber[1]))
-        return false;
-
-    // rest should be numbers
-    for (int i = 2; i < flightNumber.Length; i++)
-    {
-        if (!char.IsDigit(flightNumber[i]))
-            return false;
-    }
-    return true;
-}
-
 bool IsValidAirlineCode(string airlineCode)
 {
     // airline code should be exactly 2 letters
@@ -166,62 +148,68 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
     Console.WriteLine("=============================================");
     Console.WriteLine("Assign a Boarding Gate to a Flight");
     Console.WriteLine("=============================================");
-    Console.WriteLine("Enter Flight Number:");
-    string flightNo = Console.ReadLine();
-    Console.WriteLine("Enter Boarding Gate Name:");
-    string gateName = Console.ReadLine();
-
-    if (!flightDict.ContainsKey(flightNo))
+    while (true)
     {
-        Console.WriteLine("Flight number not found.");
-        return;
-    }
+        Console.WriteLine("Enter Flight Number:");
+        string flightNo = Console.ReadLine();
+        if (string.IsNullOrEmpty(flightNo))
+        {
+            Console.WriteLine("Flight number cannot be empty. Please try again.");
+            continue;
+        }
+       
+        if (!flightDict.ContainsKey(flightNo))
+        {
+            Console.WriteLine("Flight number not found.");
+            continue;
+        }
 
-    Flight flight = flightDict[flightNo];
-    foreach (var kvp in requestCodeDict)
-    {
-        string flightID = kvp.Key;
-        string requestCode = kvp.Value;
-        if (flightID == flight.FlightNumber)
+        Console.WriteLine("Enter Boarding Gate Name:");
+        string gateName = Console.ReadLine();
+        if (!boardinggateDict.ContainsKey(gateName))
+        {
+            Console.WriteLine("Boarding gate name not found.");
+            continue;
+        }
+
+        Flight flight = flightDict[flightNo];
+        BoardingGate selectedGate = boardinggateDict[gateName];
+        // assign boarding gate to the flight
+        flight.BoardingGate = selectedGate;
+
+        if (selectedGate.Flight != null)
+        {
+            Console.WriteLine($"Boarding Gate {gateName} is already assigned to another flight.");
+            return;
+        }
+
+        if (requestCodeDict.TryGetValue(flightNo, out string? requestCode) && !string.IsNullOrEmpty(requestCode))
         {
             Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}\nSpecial Request Code: {requestCode}");
         }
-        else 
+        else
         {
             Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}\nSpecial Request Code: None");
         }
-    }
-    if (!boardinggateDict.ContainsKey(gateName))
-    {
-        Console.WriteLine("Boarding gate name not found.");
-        return;
-    }
 
-    BoardingGate selectedGate = boardinggateDict[gateName];
-    // assign boarding gate to the flight
-    flight.BoardingGate = selectedGate;
-
-    if (selectedGate.Flight != null)
-    {
-        Console.WriteLine($"Boarding Gate {gateName} is already assigned to another flight.");
-        return;
-    }
-
-    Console.WriteLine($"Boarding Gate Name: {selectedGate.GateName}\nSupports DDJB: {selectedGate.SupportsDDJB}\nSupports CFFT: {selectedGate.SupportsCFFT}\nSupports LWTT: {selectedGate.SupportsLWTT}");
-    Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
-    string status = Console.ReadLine();
-    if (status == "Y")
-    {
-        Console.WriteLine("1. Delayed\n2. Boarding\n3. On Time");
-        Console.WriteLine("Please select the new status of the flight:");
-        string newStatus = Console.ReadLine();
-        flight.Status = newStatus;
-        Console.WriteLine($"Flight {flightNo} has been assigned to Boarding Gate {gateName}\n!");
-    }
-    else if (status == "N")
-    {
-        flight.Status = "On Time";
-        Console.WriteLine($"Status of the flight will be set to default of {"On Time"}\n");
+        Console.WriteLine($"Boarding Gate Name: {selectedGate.GateName}\nSupports DDJB: {selectedGate.SupportsDDJB}\nSupports CFFT: {selectedGate.SupportsCFFT}\nSupports LWTT: {selectedGate.SupportsLWTT}");
+        Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+        string status = Console.ReadLine().Trim().ToUpper();
+        if (status == "Y")
+        {
+            Console.WriteLine("1. Delayed\n2. Boarding\n3. On Time");
+            Console.WriteLine("Please select the new status of the flight:");
+            string newStatus = Console.ReadLine();
+            flight.Status = newStatus;
+            Console.WriteLine($"Flight {flightNo} has been assigned to Boarding Gate {gateName}\n!");
+            break;
+        }
+        else if (status == "N")
+        {
+            flight.Status = "On Time";
+            Console.WriteLine($"Status of the flight will be set to default of {"On Time"}\n");
+            break;
+        }
     }
 }
 // --- end of feature 5 ----
@@ -237,12 +225,6 @@ void CreateFlight(Dictionary<string, Flight> flightDict, Dictionary<string, stri
         if (string.IsNullOrEmpty(flightNo))
         {
             Console.WriteLine("Flight number cannot be empty. Please try again.");
-            continue;
-        }
-
-        if (!IsValidFlightNumber(flightNo))
-        {
-            Console.WriteLine("Invalid flight number format. It should start with 2 letters followed by numbers (e.g., SQ123).");
             continue;
         }
 
