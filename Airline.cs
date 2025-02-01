@@ -30,9 +30,16 @@ public class Airline
     }
     
     // added method for advance feature (b)
-    public double CalculateTotalFees()
+    public double CalculateFlightFees()
     {
-        return Flights.Values.Sum(flight => flight.CalculateFees());
+        double totalFees = 0;
+
+        foreach (var flight in Flights.Values)
+        {
+            totalFees += flight.CalculateFees();
+        }
+
+        return totalFees;
     }
 
     // added method for advance feature (b)
@@ -44,11 +51,15 @@ public class Airline
 
         // disc for every 3 flights
         if (flightCount >= 3)
+        {
             discounts += 350 * (flightCount / 3);
+        }
 
         // 3% off for >5 flights
         if (flightCount > 5)
-            discounts += 0.03 * CalculateTotalFees();
+        {
+            discounts += 0.03 * CalculateFlightFees();
+        }
 
         // disc for flights before 11am or after 9pm
         foreach (var flight in Flights.Values)
@@ -73,7 +84,7 @@ public class Airline
     }
     public double CalculateFees()
     {
-        return CalculateTotalFees() - CalculateDiscounts();
+        return CalculateFlightFees() - CalculateDiscounts();
     }
 
     public bool RemoveFlight(Flight flight)

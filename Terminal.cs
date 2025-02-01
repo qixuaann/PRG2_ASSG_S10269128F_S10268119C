@@ -63,7 +63,7 @@ public class Terminal
 
         foreach (var airline in Airlines.Values)
         {
-            double totalFees = airline.CalculateTotalFees();
+            double totalFees = airline.CalculateFlightFees();
             double totalDiscounts = airline.CalculateDiscounts();
             double finalFees = airline.CalculateFees();
 

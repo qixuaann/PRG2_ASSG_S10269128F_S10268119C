@@ -351,12 +351,6 @@ void DisplayTotalFeePerAirline(Terminal terminal)
     Console.WriteLine("=============================================");
     Console.WriteLine("Total Fee Per Airline for the Day");
     Console.WriteLine("=============================================");
-    Dictionary<string, string> predefinedGates = new Dictionary<string, string>
-    {
-        { "SQ 693", "A13" },
-        { "MH 722", "B2" },
-        { "CX 312", "C22" }
-    };   
 
    bool allFlightsAssigned = true;
     foreach (var flight in terminal.Flights.Values)
@@ -366,17 +360,6 @@ void DisplayTotalFeePerAirline(Terminal terminal)
             allFlightsAssigned = false;
             Console.WriteLine($"Flight {flight.FlightNumber} has not been assigned a boarding gate.");
         }
-        else
-        {
-            foreach (var kvp in predefinedGates)
-            {
-                if (flight.FlightNumber == kvp.Key)
-                {
-                  Console.WriteLine($"Flight {flight.FlightNumber} has been assigned a boarding gate.");
-
-                }
-            }
-        }
     }
 
     if (!allFlightsAssigned)
@@ -385,19 +368,106 @@ void DisplayTotalFeePerAirline(Terminal terminal)
         return;
     }
 
-    terminal.PrintAirlineFees();
+    Console.WriteLine();
     DisplayOverallTotals(terminal);
 }
 
 void DisplayOverallTotals(Terminal terminal)
 {
-    // double totalSubtotalFees = 0;
+    Console.WriteLine("\n=============================================");
+    Console.WriteLine("Overall Totals for All Airlines");
+    Console.WriteLine("=============================================");
+    terminal.PrintAirlineFees();
+}
+
+
+// main (options and calling of method)
+MainCall(flightDict, airlineDict, boardinggateDict);
+
+void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlineDict, Dictionary<string, BoardingGate> boardinggateDict)
+{
+    Terminal terminal = new Terminal();
+
+    LoadAirlines(filepath_airline, airlineDict);
+    LoadBoardinggate(filepath_gate, boardinggateDict);
+    LoadFlights(filepath_flight, flightDict);
+
+    terminal.Airlines = airlineDict;
+    terminal.BoardingGates = boardinggateDict;
+    terminal.Flights = flightDict;
+
+    while (true)
+    {
+        Console.WriteLine("=============================================");
+        Console.WriteLine("Welcome to Changi Airport Terminal 5");
+        Console.WriteLine("=============================================");
+        Console.WriteLine("1. List All Flights");
+        Console.WriteLine("2. List Boarding Gates");
+        Console.WriteLine("3. Assign a Boarding Gate to a Flight");
+        Console.WriteLine("4. Create Flight");
+        Console.WriteLine("5. Display Airline Flights");
+        Console.WriteLine("6. Modify Flight Details");
+        Console.WriteLine("7. Display Flight Schedule");
+        Console.WriteLine("8. Display Total Fee per Airline for the day");
+        Console.WriteLine("0. Exit\n");
+
+        Console.Write("Please select your option: ");
+        string option = Console.ReadLine();
+        if (option == "1")
+        {
+            DisplayFlights(terminal, flightDict);
+            Console.WriteLine();
+        }
+        else if (option == "2")
+        {
+            DisplayBoardinggates(boardinggateDict);
+            Console.WriteLine();
+        }
+        else if (option  == "3") 
+        {
+            AssignGateToFlight(flightDict, boardinggateDict, requestCodeDict);
+            DisplayBoardinggates(boardinggateDict);
+            Console.WriteLine();
+        }
+        else if (option == "4")
+        {
+            CreateFlight(flightDict, requestCodeDict);
+            Console.WriteLine();
+        }
+        else if (option == "5")
+        {
+            DisplayFullflightdetails(airlineDict);
+            Console.WriteLine();
+        }
+        else if (option == "7")
+        {
+            DisplayScheduledFlights(terminal, flightDict, requestCodeDict);  
+            Console.WriteLine();
+
+        }
+        // advanced feature (b)
+        else if (option == "8")
+        {
+            DisplayTotalFeePerAirline(terminal);
+            DisplayOverallTotals(terminal);
+            Console.WriteLine();
+        }
+        else if (option == "0")
+        {
+            Console.WriteLine("Goodbye!");
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid");
+        }
+    }
+}
+
+ // double totalSubtotalFees = 0;
     // double totalSubtotalDiscounts = 0;
     // double totalFinalFees = 0;
-    terminal.PrintAirlineFees();
-
-
-    // Console.WriteLine("Debug: Number of Airlines: " + terminal.Airlines.Count); // Debugging
+// Console.WriteLine("Debug: Number of Airlines: " + terminal.Airlines.Count); // Debugging
 
 
     // foreach (var airlineEntry in terminal.Airlines)
@@ -463,9 +533,6 @@ void DisplayOverallTotals(Terminal terminal)
 
 
     // }
-    // Console.WriteLine("\n=============================================");
-    // Console.WriteLine("Overall Totals for All Airlines");
-    // Console.WriteLine("=============================================");
     // Console.WriteLine("Subtotal of All Airline Fees: {0:C2}", totalSubtotalFees);
     // Console.WriteLine("Subtotal of All Airline Discounts: {0:C2}", totalSubtotalDiscounts);
     // Console.WriteLine("Final Total of Airline Fees: {0:C2}", totalFinalFees);
@@ -479,88 +546,3 @@ void DisplayOverallTotals(Terminal terminal)
     // {
     //     Console.WriteLine("Percentage of Discounts: N/A (No fees to calculate)");
     // }
-}
-
-
-// main (options and calling of method)
-MainCall(flightDict, airlineDict, boardinggateDict);
-
-void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlineDict, Dictionary<string, BoardingGate> boardinggateDict)
-{
-    Terminal terminal = new Terminal();
-
-    LoadAirlines(filepath_airline, airlineDict);
-    LoadBoardinggate(filepath_gate, boardinggateDict);
-    LoadFlights(filepath_flight, flightDict);
-
-    terminal.Airlines = airlineDict;
-    terminal.BoardingGates = boardinggateDict;
-    terminal.Flights = flightDict;
-
-    while (true)
-    {
-        Console.WriteLine("=============================================");
-        Console.WriteLine("Welcome to Changi Airport Terminal 5");
-        Console.WriteLine("=============================================");
-        Console.WriteLine("1. List All Flights");
-        Console.WriteLine("2. List Boarding Gates");
-        Console.WriteLine("3. Assign a Boarding Gate to a Flight");
-        Console.WriteLine("4. Create Flight");
-        Console.WriteLine("5. Display Airline Flights");
-        Console.WriteLine("6. Modify Flight Details");
-        Console.WriteLine("7. Display Flight Schedule");
-        Console.WriteLine("8. Display total fee per airline for the day");
-        Console.WriteLine("0. Exit\n");
-
-        Console.Write("Please select your option: ");
-        string option = Console.ReadLine();
-        if (option == "1")
-        {
-            DisplayFlights(terminal, flightDict);
-            Console.WriteLine();
-        }
-        else if (option == "2")
-        {
-            DisplayBoardinggates(boardinggateDict);
-            Console.WriteLine();
-        }
-        else if (option  == "3") 
-        {
-            AssignGateToFlight(flightDict, boardinggateDict, requestCodeDict);
-            DisplayBoardinggates(boardinggateDict);
-            Console.WriteLine();
-        }
-        else if (option == "4")
-        {
-            CreateFlight(flightDict, requestCodeDict);
-            Console.WriteLine();
-        }
-        else if (option == "5")
-        {
-            DisplayFullflightdetails(airlineDict);
-            Console.WriteLine();
-        }
-        else if (option == "7")
-        {
-            DisplayScheduledFlights(terminal, flightDict, requestCodeDict);  
-            Console.WriteLine();
-
-        }
-        // advanced feature (b)
-        else if (option == "8")
-        {
-            // DisplayTotalFeePerAirline(terminal);
-            DisplayOverallTotals(terminal);
-            Console.WriteLine();
-        }
-        else if (option == "0")
-        {
-            Console.WriteLine("Goodbye!");
-            break;
-        }
-        else
-        {
-            Console.WriteLine("Invalid");
-        }
-    }
-}

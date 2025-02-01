@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 
 public class Flight	: IComparable<Flight>
 {
-    //attributes - capitalized since its in public form (class diagram is in private form) 
     public string FlightNumber { get; set; }
     public string Origin { get; set; }
     public string Destination { get; set; }
@@ -26,7 +25,7 @@ public class Flight	: IComparable<Flight>
         Origin = origin;
         Destination = destination;
         ExpectedTime = expectedTime;
-        SpecialRequestCode = specialRequestCode;
+        SpecialRequestCode = specialRequestCode; // added for advance feature (b)
     }
 
     // method
@@ -36,12 +35,12 @@ public class Flight	: IComparable<Flight>
         if (Destination == "Singapore (SIN)")
         {
             // arriving 
-            fee = 500;
+            fee += 500;
         }
         else if (Origin == "Singapore (SIN)")
         {
             // departing
-            fee = 800;
+            fee += 800;
         }
         fee += 300;
         
