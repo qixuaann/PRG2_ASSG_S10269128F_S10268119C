@@ -49,7 +49,7 @@ public class Flight	: IComparable<Flight>
         {
             return 1;
         }
-        return this.ExpectedTime.CompareTo(other.ExpectedTime);
+        return ExpectedTime.CompareTo(other.ExpectedTime);
     }
 
     public override string ToString()

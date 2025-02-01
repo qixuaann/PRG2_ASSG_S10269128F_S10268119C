@@ -46,13 +46,13 @@ public class Terminal
 
     public Airline GetAirlineFromFlight(Flight flight)
     {
-        foreach (var airline in Airlines.Values)
+        string airlineCode = flight.FlightNumber.Substring(0, 2);
+
+        if (Airlines.ContainsKey(airlineCode))
         {
-            if (airline.Flights.ContainsKey(flight.FlightNumber))
-            {
-                return airline;
-            }
+            return Airlines[airlineCode];
         }
+
         return null;
     }
 
