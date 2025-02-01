@@ -82,6 +82,53 @@ void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
 }
 // --- end of feature 2 ----
 
+// validations 
+bool IsValidFlightNumber(string flightNumber)
+{
+    // flight no. should be at least 3 characters (2 letters + numbers)
+    if (flightNumber.Length < 3)
+        return false;
+
+    // first 2 characters should be letters (airline code)
+    if (!char.IsLetter(flightNumber[0]) || !char.IsLetter(flightNumber[1]))
+        return false;
+
+    // rest should be numbers
+    for (int i = 2; i < flightNumber.Length; i++)
+    {
+        if (!char.IsDigit(flightNumber[i]))
+            return false;
+    }
+    return true;
+}
+
+bool IsValidAirlineCode(string airlineCode)
+{
+    // airline code should be exactly 2 letters
+    if (airlineCode.Length != 2 || !char.IsLetter(airlineCode[0]) || !char.IsLetter(airlineCode[1]))
+        return false;
+
+    // check if the airline code exists in the airline dictionary
+    return airlineDict.ContainsKey(airlineCode);
+}
+
+bool IsValidBoardingGate(string gateName)
+{
+    // check if the boarding gate exists in the boarding gate dictionary
+    return boardinggateDict.ContainsKey(gateName);
+}
+
+bool IsValidDateTime(string dateTimeStr, out DateTime result)
+{
+    return DateTime.TryParse(dateTimeStr, out result);
+}
+
+bool IsValidRequestCode(string requestCode)
+{
+    string[] validCodes = { "CFFT", "DDJB", "LWTT", "None" };
+    return validCodes.Contains(requestCode);
+}
+
 // feature 3 - list flights
 void DisplayFlights(Terminal terminal, Dictionary<string, Flight> flightDict)
 {
@@ -180,26 +227,77 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
 // --- end of feature 5 ----
 
 // feature 6 - create a new flight
-void CreateFlight(Dictionary<string, Flight> flightDict, Dictionary<string, string> requestCodeDict) 
+void CreateFlight(Dictionary<string, Flight> flightDict, Dictionary<string, string> requestCodeDict)
 {
-    while (true) 
+    while (true)
     {
         Console.Write("Enter Flight Number: ");
-        string flightNo = Console.ReadLine();
+        string flightNo = Console.ReadLine().Trim();
+
+        if (string.IsNullOrEmpty(flightNo))
+        {
+            Console.WriteLine("Flight number cannot be empty. Please try again.");
+            continue;
+        }
+
+        if (!IsValidFlightNumber(flightNo))
+        {
+            Console.WriteLine("Invalid flight number format. It should start with 2 letters followed by numbers (e.g., SQ123).");
+            continue;
+        }
+
+        if (flightDict.ContainsKey(flightNo))
+        {
+            Console.WriteLine("Flight number already exists. Please enter a unique flight number.");
+            continue;
+        }
+
         Console.Write("Enter Origin: ");
-        string origin = Console.ReadLine();
+        string origin = Console.ReadLine().Trim();
+
+        if (string.IsNullOrEmpty(origin))
+        {
+            Console.WriteLine("Origin cannot be empty. Please try again.");
+            continue;
+        }
+
         Console.Write("Enter Destination: ");
-        string destination = Console.ReadLine();
+        string destination = Console.ReadLine().Trim();
+
+        if (string.IsNullOrEmpty(destination))
+        {
+            Console.WriteLine("Destination cannot be empty. Please try again.");
+            continue;
+        }
+
         Console.Write("Enter Expected Departure/Arrival Time (dd/m/yyyy hh:mm): ");
-        DateTime time = DateTime.ParseExact(Console.ReadLine(), "d/M/yyyy HH:mm", null);
+        string dateTimeStr = Console.ReadLine().Trim();
+        DateTime expectedTime;
+
+        if (!IsValidDateTime(dateTimeStr, out expectedTime))
+        {
+            Console.WriteLine("Invalid date/time format. Please use the format dd/m/yyyy hh:mm.");
+            continue;
+        }
+
         Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
-        string requestCode = Console.ReadLine();
-        Flight newFlight = new Flight(flightNo, origin, destination, time);
+        string requestCode = Console.ReadLine().Trim();
+
+        if (!IsValidRequestCode(requestCode))
+        {
+            Console.WriteLine("Invalid special request code. Please enter one of: CFFT, DDJB, LWTT, or None.");
+            continue;
+        }
+
+        Flight newFlight = new Flight(flightNo, origin, destination, expectedTime);
         flightDict.Add(flightNo, newFlight);
         requestCodeDict.Add(flightNo, requestCode);
+
         Console.WriteLine($"Flight {flightNo} has been added!");
+
         Console.WriteLine("Would you like to add another flight? (Y/N)");
-        string permission = Console.ReadLine();
+        string permission = Console.ReadLine().Trim().ToUpper();
+
         if (permission == "N")
         {
             break;
@@ -210,6 +308,7 @@ void CreateFlight(Dictionary<string, Flight> flightDict, Dictionary<string, stri
         }
     }
 }
+
 // --- end of feature 6 ----
 
 // feature 7 - display full flight details from an airline
@@ -346,6 +445,7 @@ void DisplayScheduledFlights(Terminal terminal, Dictionary<string, Flight> fligh
 
 // --- end of feature 9 ----
 // advanced feature - (b) display the total fee per airline for the day
+// -> Joyce
 void DisplayTotalFeePerAirline(Terminal terminal)
 {
     Console.WriteLine("=============================================");
@@ -463,86 +563,3 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         }
     }
 }
-
- // double totalSubtotalFees = 0;
-    // double totalSubtotalDiscounts = 0;
-    // double totalFinalFees = 0;
-// Console.WriteLine("Debug: Number of Airlines: " + terminal.Airlines.Count); // Debugging
-
-
-    // foreach (var airlineEntry in terminal.Airlines)
-    // {
-    //     Airline airline = airlineEntry.Value;
-    //     Console.WriteLine($"Debug: Processing Airline: {airline.Name}"); // Debugging
-    //     Console.WriteLine($"Debug: Number of Flights: {airline.Flights.Count}"); // Debugging
-
-    //     double totalFees = 0;
-    //     double discount = 0;
-
-    //     // all flights for airline
-    //     foreach (var flight in airline.Flights.Values)
-    //     {
-    //         Console.WriteLine($"Debug: Processing Flight: {flight.FlightNumber}"); // Debugging
-
-    //         totalFees += flight.CalculateFees();
-
-    //         if (requestCodeDict.ContainsKey(flight.FlightNumber))
-    //         {
-    //             string requestCode = requestCodeDict[flight.FlightNumber];
-                
-    //             if (requestCode == "CFFT")
-    //                 totalFees += 100; 
-    //             else if (requestCode == "DDJB")
-    //             {
-    //                 totalFees += 150; 
-    //             }
-    //             else if (requestCode == "LWTT")
-    //             {
-    //                 totalFees += 200; 
-    //             }
-    //             totalFees += 0;
-
-    //             if (flight.ExpectedTime.Hour < 11 || flight.ExpectedTime.Hour >= 21)
-    //             {
-    //                 discount += 110;
-    //             }
-    //             if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" || flight.Origin == "Tokyo (NRT)")
-    //             {
-    //                 discount += 25;
-    //             }
-    //             if (string.IsNullOrEmpty(flight.Status))
-    //             {
-    //                 discount += 50;
-    //             }
-    //         }
-
-    //         int flightCount = airline.Flights.Count;
-    //         discount += (flightCount / 3) * 350;
-    //         if (flightCount > 5)
-    //         {
-    //             discount += totalFees * 0.03; 
-    //         }
-    //     }
-
-        // double finalFee = totalFees - discount;
-
-    //     totalSubtotalFees += totalFees;
-    //     totalSubtotalDiscounts += discount;
-    //     totalFinalFees += finalFee;
-    //     Console.WriteLine($"Debug: Airline {airline.Name} - Total Fees: {totalFees:C2}, Discount: {discount:C2}, Final Fee: {finalFee:C2}"); // Debugging
-
-
-    // }
-    // Console.WriteLine("Subtotal of All Airline Fees: {0:C2}", totalSubtotalFees);
-    // Console.WriteLine("Subtotal of All Airline Discounts: {0:C2}", totalSubtotalDiscounts);
-    // Console.WriteLine("Final Total of Airline Fees: {0:C2}", totalFinalFees);
-
-    // if (totalFinalFees > 0)
-    // {
-    //     double discountPercentage = (totalSubtotalDiscounts / totalFinalFees) * 100;
-    //     Console.WriteLine("Percentage of Discounts: {0:F2}%", discountPercentage);
-    // }
-    // else
-    // {
-    //     Console.WriteLine("Percentage of Discounts: N/A (No fees to calculate)");
-    // }
