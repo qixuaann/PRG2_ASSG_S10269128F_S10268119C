@@ -14,8 +14,8 @@ public class Flight	: IComparable<Flight>
     public string Destination { get; set; }
     public DateTime ExpectedTime { get; set; }
     public string Status { get; set; } = "On Time"; // default as stated
-    public BoardingGate BoardingGate { get; set; } // added for advance feature (b)
-    public string SpecialRequestCode { get; set; } // added for advance feature (b)
+    public BoardingGate BoardingGate { get; set; } // added for advanced feature (b) - joyce
+    public string SpecialRequestCode { get; set; } // added for advanced feature (b) - joyce
 
 
     //constructor
@@ -25,7 +25,7 @@ public class Flight	: IComparable<Flight>
         Origin = origin;
         Destination = destination;
         ExpectedTime = expectedTime;
-        SpecialRequestCode = specialRequestCode; // added for advance feature (b)
+        SpecialRequestCode = specialRequestCode; // added for advance feature (b) - joyce
     }
 
     // method
