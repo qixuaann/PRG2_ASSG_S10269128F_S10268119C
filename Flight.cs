@@ -5,6 +5,7 @@
 // ===========================
 
 using System;
+using System.Runtime.InteropServices;
 
 public class Flight	: IComparable<Flight>
 {
@@ -15,33 +16,51 @@ public class Flight	: IComparable<Flight>
     public DateTime ExpectedTime { get; set; }
     public string Status { get; set; } = "On Time"; // default as stated
     public BoardingGate BoardingGate { get; set; } // added for advance feature (b)
+    public string SpecialRequestCode { get; set; } // added for advance feature (b)
 
 
     //constructor
-    public Flight(string flightNumber, string origin, string destination, DateTime expectedTime)
+    public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string specialRequestCode = null)
 	{   
         FlightNumber = flightNumber;
         Origin = origin;
         Destination = destination;
-        ExpectedTime = expectedTime;	
+        ExpectedTime = expectedTime;
+        SpecialRequestCode = specialRequestCode;
     }
 
     // method
     public virtual double CalculateFees()
     {
-        double baseFee = 0;
+        double fee = 0;
         if (Destination == "Singapore (SIN)")
         {
             // arriving 
-            baseFee = 500;
+            fee = 500;
         }
         else if (Origin == "Singapore (SIN)")
         {
             // departing
-            baseFee = 800;
+            fee = 800;
         }
-        return baseFee;
-        // return 300.00; - base fee for all boarding gates (thats for terminal) 
+        fee += 300;
+        
+        if (SpecialRequestCode != null)
+        {
+            if (SpecialRequestCode == "DDJB")
+            {
+                fee += 300;
+            }
+            else if (SpecialRequestCode == "CFFT")
+            {
+                fee += 150;
+            }
+            else if (SpecialRequestCode == "LWTT")
+            {
+                fee += 500;
+            }
+        }
+        return fee;
     }
 
     public int CompareTo(Flight other)

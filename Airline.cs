@@ -28,15 +28,52 @@ public class Airline
         }
         return false;
     }
-
-    public double CalculateFees()
+    
+    // added method for advance feature (b)
+    public double CalculateTotalFees()
     {
-        double totalFees = 0;
+        return Flights.Values.Sum(flight => flight.CalculateFees());
+    }
+
+    // added method for advance feature (b)
+
+    public double CalculateDiscounts()
+    {
+        double discounts = 0;
+        int flightCount = Flights.Count;
+
+        // disc for every 3 flights
+        if (flightCount >= 3)
+            discounts += 350 * (flightCount / 3);
+
+        // 3% off for >5 flights
+        if (flightCount > 5)
+            discounts += 0.03 * CalculateTotalFees();
+
+        // disc for flights before 11am or after 9pm
         foreach (var flight in Flights.Values)
         {
-            totalFees += flight.CalculateFees();
+            if (flight.ExpectedTime.Hour < 11 || flight.ExpectedTime.Hour >= 21)
+            {
+                discounts += 110;
+            }
+
+            if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" || flight.Origin == "Tokyo (NRT)")
+            {
+                discounts += 25;
+            }
+
+            // disc for no special request codes
+           if (string.IsNullOrEmpty(flight.SpecialRequestCode))
+           {
+                discounts += 50;
+           }
         }
-        return totalFees;
+        return discounts;
+    }
+    public double CalculateFees()
+    {
+        return CalculateTotalFees() - CalculateDiscounts();
     }
 
     public bool RemoveFlight(Flight flight)

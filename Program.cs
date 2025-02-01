@@ -83,7 +83,7 @@ void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict)
 // --- end of feature 2 ----
 
 // feature 3 - list flights
-void DisplayFlights(Dictionary<string, Flight> flightDict)
+void DisplayFlights(Terminal terminal, Dictionary<string, Flight> flightDict)
 {
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Flights for Changi Airport Terminal 5");
@@ -92,10 +92,8 @@ void DisplayFlights(Dictionary<string, Flight> flightDict)
     foreach (var kvp in flightDict)
     {
         var flight = kvp.Value;
-        foreach (var kvp2 in airlineDict) {
-            var airline = kvp2.Value;
-            Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, airline.Name, flight.Origin, flight.Destination, flight.ExpectedTime);
-        }
+        var airline = terminal.GetAirlineFromFlight(flight);
+        Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, airline.Name, flight.Origin, flight.Destination, flight.ExpectedTime);
     }
 }
 // --- end of feature 3 ----
@@ -374,7 +372,8 @@ void DisplayTotalFeePerAirline(Terminal terminal)
             {
                 if (flight.FlightNumber == kvp.Key)
                 {
-                    Console.WriteLine($"Flight {flight.FlightNumber} has been assigned a boarding gate.");
+                  Console.WriteLine($"Flight {flight.FlightNumber} has been assigned a boarding gate.");
+
                 }
             }
         }
@@ -387,96 +386,99 @@ void DisplayTotalFeePerAirline(Terminal terminal)
     }
 
     terminal.PrintAirlineFees();
-    DisplayOverallTotals(terminal, requestCodeDict);
+    DisplayOverallTotals(terminal);
 }
 
-void DisplayOverallTotals(Terminal terminal, Dictionary<string, string> requestCodeDict)
+void DisplayOverallTotals(Terminal terminal)
 {
-    double totalSubtotalFees = 0;
-    double totalSubtotalDiscounts = 0;
-    double totalFinalFees = 0;
-    Console.WriteLine("Debug: Number of Airlines: " + terminal.Airlines.Count); // Debugging
+    // double totalSubtotalFees = 0;
+    // double totalSubtotalDiscounts = 0;
+    // double totalFinalFees = 0;
+    terminal.PrintAirlineFees();
 
 
-    foreach (var airlineEntry in terminal.Airlines)
-    {
-        Airline airline = airlineEntry.Value;
-        Console.WriteLine($"Debug: Processing Airline: {airline.Name}"); // Debugging
-        Console.WriteLine($"Debug: Number of Flights: {airline.Flights.Count}"); // Debugging
+    // Console.WriteLine("Debug: Number of Airlines: " + terminal.Airlines.Count); // Debugging
 
-        double totalFees = 0;
-        double discount = 0;
 
-        // all flights for airline
-        foreach (var flight in airline.Flights.Values)
-        {
-            Console.WriteLine($"Debug: Processing Flight: {flight.FlightNumber}"); // Debugging
+    // foreach (var airlineEntry in terminal.Airlines)
+    // {
+    //     Airline airline = airlineEntry.Value;
+    //     Console.WriteLine($"Debug: Processing Airline: {airline.Name}"); // Debugging
+    //     Console.WriteLine($"Debug: Number of Flights: {airline.Flights.Count}"); // Debugging
 
-            totalFees += flight.CalculateFees();
+    //     double totalFees = 0;
+    //     double discount = 0;
 
-            if (requestCodeDict.ContainsKey(flight.FlightNumber))
-            {
-                string requestCode = requestCodeDict[flight.FlightNumber];
+    //     // all flights for airline
+    //     foreach (var flight in airline.Flights.Values)
+    //     {
+    //         Console.WriteLine($"Debug: Processing Flight: {flight.FlightNumber}"); // Debugging
+
+    //         totalFees += flight.CalculateFees();
+
+    //         if (requestCodeDict.ContainsKey(flight.FlightNumber))
+    //         {
+    //             string requestCode = requestCodeDict[flight.FlightNumber];
                 
-                if (requestCode == "CFFT")
-                    totalFees += 100; 
-                else if (requestCode == "DDJB")
-                {
-                    totalFees += 150; 
-                }
-                else if (requestCode == "LWTT")
-                {
-                    totalFees += 200; 
-                }
-                totalFees += 0;
+    //             if (requestCode == "CFFT")
+    //                 totalFees += 100; 
+    //             else if (requestCode == "DDJB")
+    //             {
+    //                 totalFees += 150; 
+    //             }
+    //             else if (requestCode == "LWTT")
+    //             {
+    //                 totalFees += 200; 
+    //             }
+    //             totalFees += 0;
 
-                if (flight.ExpectedTime.Hour < 11 || flight.ExpectedTime.Hour >= 21)
-                {
-                    discount += 110;
-                }
-                if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" || flight.Origin == "Tokyo (NRT)")
-                {
-                    discount += 25;
-                }
-                if (string.IsNullOrEmpty(flight.Status))
-                {
-                    discount += 50;
-                }
-            }
+    //             if (flight.ExpectedTime.Hour < 11 || flight.ExpectedTime.Hour >= 21)
+    //             {
+    //                 discount += 110;
+    //             }
+    //             if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" || flight.Origin == "Tokyo (NRT)")
+    //             {
+    //                 discount += 25;
+    //             }
+    //             if (string.IsNullOrEmpty(flight.Status))
+    //             {
+    //                 discount += 50;
+    //             }
+    //         }
 
-            int flightCount = airline.Flights.Count;
-            discount += (flightCount / 3) * 350;
-            if (flightCount > 5)
-            {
-                discount += totalFees * 0.03; 
-            }
-        }
+    //         int flightCount = airline.Flights.Count;
+    //         discount += (flightCount / 3) * 350;
+    //         if (flightCount > 5)
+    //         {
+    //             discount += totalFees * 0.03; 
+    //         }
+    //     }
 
-        double finalFee = totalFees - discount;
+        // double finalFee = totalFees - discount;
 
-        totalSubtotalFees += totalFees;
-        totalSubtotalDiscounts += discount;
-        totalFinalFees += finalFee;
-        Console.WriteLine($"Debug: Airline {airline.Name} - Total Fees: {totalFees:C2}, Discount: {discount:C2}, Final Fee: {finalFee:C2}"); // Debugging
+    //     totalSubtotalFees += totalFees;
+    //     totalSubtotalDiscounts += discount;
+    //     totalFinalFees += finalFee;
+    //     Console.WriteLine($"Debug: Airline {airline.Name} - Total Fees: {totalFees:C2}, Discount: {discount:C2}, Final Fee: {finalFee:C2}"); // Debugging
 
 
-    }
-    Console.WriteLine("\n=============================================");
-    Console.WriteLine("Overall Totals for All Airlines");
-    Console.WriteLine("=============================================");
-    Console.WriteLine("Subtotal of All Airline Fees: {0:C2}", totalSubtotalFees);
-    Console.WriteLine("Subtotal of All Airline Discounts: {0:C2}", totalSubtotalDiscounts);
-    Console.WriteLine("Final Total of Airline Fees: {0:C2}", totalFinalFees);
+    // }
+    // Console.WriteLine("\n=============================================");
+    // Console.WriteLine("Overall Totals for All Airlines");
+    // Console.WriteLine("=============================================");
+    // Console.WriteLine("Subtotal of All Airline Fees: {0:C2}", totalSubtotalFees);
+    // Console.WriteLine("Subtotal of All Airline Discounts: {0:C2}", totalSubtotalDiscounts);
+    // Console.WriteLine("Final Total of Airline Fees: {0:C2}", totalFinalFees);
 
-    if (totalFinalFees > 0)
-    {
-        double discountPercentage = (totalSubtotalDiscounts / totalFinalFees) * 100;
-        Console.WriteLine("Percentage of Discounts: {0:F2}%", discountPercentage);
-    }
-    else
-    {
-        Console.WriteLine("Percentage of Discounts: N/A (No fees to calculate)");
-    }
+    // if (totalFinalFees > 0)
+    // {
+    //     double discountPercentage = (totalSubtotalDiscounts / totalFinalFees) * 100;
+    //     Console.WriteLine("Percentage of Discounts: {0:F2}%", discountPercentage);
+    // }
+    // else
+    // {
+    //     Console.WriteLine("Percentage of Discounts: N/A (No fees to calculate)");
+    // }
 }
 
 
@@ -514,7 +516,7 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         string option = Console.ReadLine();
         if (option == "1")
         {
-            DisplayFlights(flightDict);
+            DisplayFlights(terminal, flightDict);
             Console.WriteLine();
         }
         else if (option == "2")
@@ -547,8 +549,8 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         // advanced feature (b)
         else if (option == "8")
         {
-            DisplayTotalFeePerAirline(terminal);
-            DisplayOverallTotals(terminal, requestCodeDict);
+            // DisplayTotalFeePerAirline(terminal);
+            DisplayOverallTotals(terminal);
             Console.WriteLine();
         }
         else if (option == "0")
