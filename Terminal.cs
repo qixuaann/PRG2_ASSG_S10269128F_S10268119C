@@ -99,5 +99,4 @@ public class Terminal
 	{
         return $"Terminal: {TerminalName}\t Airlines: {Airlines.Count}\t Boarding Gates: {BoardingGates.Count}";
     }
-
 }

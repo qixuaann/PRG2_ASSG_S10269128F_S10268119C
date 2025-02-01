@@ -14,6 +14,7 @@ public class Flight	: IComparable<Flight>
     public string Destination { get; set; }
     public DateTime ExpectedTime { get; set; }
     public string Status { get; set; } = "On Time"; // default as stated
+    public BoardingGate BoardingGate { get; set; } // added for advance feature (b)
 
 
     //constructor
@@ -28,13 +29,13 @@ public class Flight	: IComparable<Flight>
     // method
     public virtual double CalculateFees()
     {
-        double baseFee;
-        if (Destination == "SIN")
+        double baseFee = 0;
+        if (Destination == "Singapore (SIN)")
         {
             // arriving 
             baseFee = 500;
         }
-        else
+        else if (Origin == "Singapore (SIN)")
         {
             // departing
             baseFee = 800;

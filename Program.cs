@@ -153,6 +153,8 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
     }
 
     BoardingGate selectedGate = boardinggateDict[gateName];
+    // assign boarding gate to the flight
+    flight.BoardingGate = selectedGate;
 
     if (selectedGate.Flight != null)
     {
@@ -345,6 +347,138 @@ void DisplayScheduledFlights(Terminal terminal, Dictionary<string, Flight> fligh
 }
 
 // --- end of feature 9 ----
+// advanced feature - (b) display the total fee per airline for the day
+void DisplayTotalFeePerAirline(Terminal terminal)
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Total Fee Per Airline for the Day");
+    Console.WriteLine("=============================================");
+    Dictionary<string, string> predefinedGates = new Dictionary<string, string>
+    {
+        { "SQ 693", "A13" },
+        { "MH 722", "B2" },
+        { "CX 312", "C22" }
+    };   
+
+   bool allFlightsAssigned = true;
+    foreach (var flight in terminal.Flights.Values)
+    {
+        if (flight.BoardingGate == null)
+        {
+            allFlightsAssigned = false;
+            Console.WriteLine($"Flight {flight.FlightNumber} has not been assigned a boarding gate.");
+        }
+        else
+        {
+            foreach (var kvp in predefinedGates)
+            {
+                if (flight.FlightNumber == kvp.Key)
+                {
+                    Console.WriteLine($"Flight {flight.FlightNumber} has been assigned a boarding gate.");
+                }
+            }
+        }
+    }
+
+    if (!allFlightsAssigned)
+    {
+        Console.WriteLine("Please ensure that all flights have their boarding gates assigned before running this feature again.");
+        return;
+    }
+
+    terminal.PrintAirlineFees();
+    DisplayOverallTotals(terminal, requestCodeDict);
+}
+
+void DisplayOverallTotals(Terminal terminal, Dictionary<string, string> requestCodeDict)
+{
+    double totalSubtotalFees = 0;
+    double totalSubtotalDiscounts = 0;
+    double totalFinalFees = 0;
+    Console.WriteLine("Debug: Number of Airlines: " + terminal.Airlines.Count); // Debugging
+
+
+    foreach (var airlineEntry in terminal.Airlines)
+    {
+        Airline airline = airlineEntry.Value;
+        Console.WriteLine($"Debug: Processing Airline: {airline.Name}"); // Debugging
+        Console.WriteLine($"Debug: Number of Flights: {airline.Flights.Count}"); // Debugging
+
+        double totalFees = 0;
+        double discount = 0;
+
+        // all flights for airline
+        foreach (var flight in airline.Flights.Values)
+        {
+            Console.WriteLine($"Debug: Processing Flight: {flight.FlightNumber}"); // Debugging
+
+            totalFees += flight.CalculateFees();
+
+            if (requestCodeDict.ContainsKey(flight.FlightNumber))
+            {
+                string requestCode = requestCodeDict[flight.FlightNumber];
+                
+                if (requestCode == "CFFT")
+                    totalFees += 100; 
+                else if (requestCode == "DDJB")
+                {
+                    totalFees += 150; 
+                }
+                else if (requestCode == "LWTT")
+                {
+                    totalFees += 200; 
+                }
+                totalFees += 0;
+
+                if (flight.ExpectedTime.Hour < 11 || flight.ExpectedTime.Hour >= 21)
+                {
+                    discount += 110;
+                }
+                if (flight.Origin == "Dubai (DXB)" || flight.Origin == "Bangkok (BKK)" || flight.Origin == "Tokyo (NRT)")
+                {
+                    discount += 25;
+                }
+                if (string.IsNullOrEmpty(flight.Status))
+                {
+                    discount += 50;
+                }
+            }
+
+            int flightCount = airline.Flights.Count;
+            discount += (flightCount / 3) * 350;
+            if (flightCount > 5)
+            {
+                discount += totalFees * 0.03; 
+            }
+        }
+
+        double finalFee = totalFees - discount;
+
+        totalSubtotalFees += totalFees;
+        totalSubtotalDiscounts += discount;
+        totalFinalFees += finalFee;
+        Console.WriteLine($"Debug: Airline {airline.Name} - Total Fees: {totalFees:C2}, Discount: {discount:C2}, Final Fee: {finalFee:C2}"); // Debugging
+
+
+    }
+    Console.WriteLine("\n=============================================");
+    Console.WriteLine("Overall Totals for All Airlines");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Subtotal of All Airline Fees: {0:C2}", totalSubtotalFees);
+    Console.WriteLine("Subtotal of All Airline Discounts: {0:C2}", totalSubtotalDiscounts);
+    Console.WriteLine("Final Total of Airline Fees: {0:C2}", totalFinalFees);
+
+    if (totalFinalFees > 0)
+    {
+        double discountPercentage = (totalSubtotalDiscounts / totalFinalFees) * 100;
+        Console.WriteLine("Percentage of Discounts: {0:F2}%", discountPercentage);
+    }
+    else
+    {
+        Console.WriteLine("Percentage of Discounts: N/A (No fees to calculate)");
+    }
+}
+
 
 // main (options and calling of method)
 MainCall(flightDict, airlineDict, boardinggateDict);
@@ -373,6 +507,7 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         Console.WriteLine("5. Display Airline Flights");
         Console.WriteLine("6. Modify Flight Details");
         Console.WriteLine("7. Display Flight Schedule");
+        Console.WriteLine("8. Display total fee per airline for the day");
         Console.WriteLine("0. Exit\n");
 
         Console.Write("Please select your option: ");
@@ -398,15 +533,22 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
             CreateFlight(flightDict, requestCodeDict);
             Console.WriteLine();
         }
+        else if (option == "5")
+        {
+            DisplayFullflightdetails(airlineDict);
+            Console.WriteLine();
+        }
         else if (option == "7")
         {
             DisplayScheduledFlights(terminal, flightDict, requestCodeDict);  
             Console.WriteLine();
 
         }
-        else if (option == "5")
+        // advanced feature (b)
+        else if (option == "8")
         {
-            DisplayFullflightdetails(airlineDict);
+            DisplayTotalFeePerAirline(terminal);
+            DisplayOverallTotals(terminal, requestCodeDict);
             Console.WriteLine();
         }
         else if (option == "0")
