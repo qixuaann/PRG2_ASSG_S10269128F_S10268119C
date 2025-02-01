@@ -300,49 +300,44 @@ void DisplayFullflightdetails(Dictionary<string, Airline> airlineDict, Dictionar
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
     Console.WriteLine("{0,-16} {1,-20}", "Airline Code", "Airline Name");
+    
     foreach (var flightEntry in airlineDict)
     {
         var flightdetail = flightEntry.Value;
         Console.WriteLine("{0,-16} {1,-20}", flightdetail.Code, flightdetail.Name);
     }
+
     Console.Write("Enter Airline Code: ");
     string inputCode = Console.ReadLine().ToUpper();
+
     if (!airlineDict.ContainsKey(inputCode))
     {
         Console.WriteLine("Invalid Airline Code. Please try again.");
         return;
     }
-    // Get the selected airline from the dictionary using the input code
-    Airline selectedAirline = airlineDict[inputCode];
 
-    // Create an empty list to store the filtered flights
+    Airline selectedAirline = airlineDict[inputCode];
     List<Flight> filteredFlights = new List<Flight>();
 
-    // Go through each flight in the flight dictionary
     foreach (var flightEntry in flightDict)
     {
         Flight flight = flightEntry.Value;
 
-        // Extract the airline code from the flight number (assumes first 2 characters)
         string airlineCode = flight.FlightNumber.Substring(0, 2);
 
-        // Compare with the selected airline's code (changed from Name to Code)
         if (airlineCode == selectedAirline.Code)
         {
             filteredFlights.Add(flight);
         }
     }
-    // Display the selected airline's name and code
+
     Console.WriteLine("=============================================");
     Console.WriteLine($"List of Flights for {selectedAirline.Name}");
     Console.WriteLine("=============================================");
-    // Check if there are any flights for the selected airline
     if (filteredFlights.Count > 0)
     {
-        // Display table headers
         Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
 
-        // Go through the filtered flights and print their details
         foreach (var flight in filteredFlights)
         {
             Console.WriteLine("{0,-16} {1,-20} {2,-20} {3,-21} {4,-21}", flight.FlightNumber, selectedAirline.Name, flight.Origin, flight.Destination, flight.ExpectedTime);
@@ -350,10 +345,11 @@ void DisplayFullflightdetails(Dictionary<string, Airline> airlineDict, Dictionar
     }
     else
     {
-        // If no flights are found, display this message
         Console.WriteLine("No flights available for this airline.");
     }
 }
+
+// ---- end of feature 7 ----
 
 // feature 8 - modify flight details
 
