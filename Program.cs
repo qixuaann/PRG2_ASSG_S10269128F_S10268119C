@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Windows.Markup;
 
 // start of feature 1
-
 // load the airlines.csv file
 string filepath_airline = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/airlines.csv";
 Dictionary<string, Airline> airlineDict = new Dictionary<string, Airline>();
@@ -26,7 +25,6 @@ void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDi
         }
     }
 }
-
 // airlines.csv file loaded
 
 // load the boardinggates.csv file
@@ -52,13 +50,10 @@ void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boa
         }
     }
 }
-
 // boardinggates.csv file loaded 
-
 // end of feature 1
 
-// feature 2 -load flights.csv (flights)
-
+// feature 2 - load flights.csv (flights)
 Dictionary<string, string> requestCodeDict = new Dictionary<string, string>();
 
 string filepath_flight = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/flights.csv";
@@ -149,7 +144,6 @@ void AssignGateToFlight(Dictionary<string, Flight> flightDict, Dictionary<string
         else 
         {
             Console.WriteLine($"Flight Number: {flight.FlightNumber}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpectedTime: {flight.ExpectedTime}\nSpecial Request Code: None");
-
         }
     }
     if (!boardinggateDict.ContainsKey(gateName))
@@ -426,70 +420,3 @@ void MainCall(Dictionary<string, Flight> flightDict, Dictionary<string, Airline>
         }
     }
 }
-
-// void MainCall()
-// {
-//     Terminal terminal = new Terminal();
-
-//     terminal.LoadAirlines(filepath_airline);
-//     terminal.LoadBoardingGates(filepath_gate);
-//     terminal.LoadFlights(filepath_flight);
-
-//     while (true)
-//     {
-//         Console.WriteLine("=============================================");
-//         Console.WriteLine("Welcome to Changi Airport Terminal 5");
-//         Console.WriteLine("=============================================");
-//         Console.WriteLine("1. List All Flights");
-//         Console.WriteLine("2. List Boarding Gates");
-//         Console.WriteLine("3. Assign a Boarding Gate to a Flight");
-//         Console.WriteLine("4. Create Flight");
-//         Console.WriteLine("5. Display Airline Flights");
-//         Console.WriteLine("6. Modify Flight Details");
-//         Console.WriteLine("7. Display Flight Schedule");
-//         Console.WriteLine("0. Exit\n");
-
-//         Console.Write("Please select your option: ");
-//         string option = Console.ReadLine();
-
-//         if (option == "1")
-//         {
-//             DisplayFlights(terminal.Flights, terminal.Airlines);
-//             Console.WriteLine();
-//         }
-//         else if (option == "2")
-//         {
-//             DisplayBoardinggates(terminal.BoardingGates);
-//             Console.WriteLine();
-//         }
-//         else if (option == "3")
-//         {
-//             AssignGateToFlight(terminal.Flights, terminal.BoardingGates, requestCodeDict);
-//             Console.WriteLine();
-//         }
-//         else if (option == "4")
-//         {
-//             CreateFlight(terminal.Flights, requestCodeDict);
-//             Console.WriteLine();
-//         }
-//         else if (option == "5")
-//         {
-//             DisplayFullflightdetails(terminal.Airlines);
-//             Console.WriteLine();
-//         }
-//         else if (option == "7")
-//         {
-//             DisplayScheduledFlights(terminal);
-//             Console.WriteLine();
-//         }
-//         else if (option == "0")
-//         {
-//             Console.WriteLine("Goodbye!");
-//             break;
-//         }
-//         else
-//         {
-//             Console.WriteLine("Invalid option. Please try again.");
-//         }
-//     }
-// }
