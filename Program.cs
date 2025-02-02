@@ -13,7 +13,7 @@
 
     // start of feature 1
     // load the airlines.csv file
-    string filepath_airline = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv";
+    string filepath_airline = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/airlines.csv";
     Dictionary<string, Airline> airlineDict = new Dictionary<string, Airline>();
 
     void LoadAirlines(string filepath_airline, Dictionary<string, Airline> airlineDict)
@@ -37,7 +37,7 @@
     // airlines.csv file loaded
 
     // load the boardinggates.csv file
-    string filepath_gate = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\boardinggates.csv";
+    string filepath_gate = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/boardinggates.csv";
     Dictionary<string, BoardingGate> boardinggateDict = new Dictionary<string, BoardingGate>();
 
     void LoadBoardinggate(string filepath_gate, Dictionary<string, BoardingGate> boardinggateDict)
@@ -65,7 +65,7 @@
     // feature 2 - load flights.csv (flights)
     Dictionary<string, string> requestCodeDict = new Dictionary<string, string>();
 
-    string filepath_flight = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\flights.csv";
+    string filepath_flight = "/Users/joyce/Github/PRG2_ASSG_S10269128F_S10268119C/flights.csv";
     Dictionary<string, Flight> flightDict = new Dictionary<string, Flight>();
 
     void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict, Dictionary<string, Airline> airlineDict)
@@ -823,18 +823,7 @@
         Console.WriteLine("\n=============================================");
         Console.WriteLine("Overall Totals for All Airlines");
         Console.WriteLine("=============================================");
-        // // checks
-        // double money = airline.CalculateFees();
-        // Console.WriteLine($"{money}");
-        
-        // double totalFees = airline.CalculateFlightFees();
-        // Console.WriteLine($"{totalFees}");
-
-        // double totalDiscounts = airline.CalculateDiscounts();
-        // Console.WriteLine($"{totalDiscounts}");
-    
         terminal.PrintAirlineFees();
-
     }
 
     // main (options and calling of method)
@@ -866,7 +855,7 @@
             Console.WriteLine("5. Display Airline Flights");
             Console.WriteLine("6. Modify Flight Details");
             Console.WriteLine("7. Display Flight Schedule");
-            Console.WriteLine("8. Process all unassigned flights to boarding gates");
+            Console.WriteLine("8. Process all Unassigned Flights to Boarding Gates");
             Console.WriteLine("9. Display Total Fee per Airline for the day");
             Console.WriteLine("0. Exit\n");
 
@@ -923,13 +912,13 @@
                 Console.WriteLine();
 
             }
-            // advanced feature (a)
+            // advanced feature (a) - Qi Xuan
             else if (option == "8")
             {
                 ProcessBulkBoardingGateAssignment(flightDict, boardinggateDict, terminal);
                 Console.WriteLine();
             }
-            // advanced feature (b)
+            // advanced feature (b) - Joyce
             else if (option == "9")
             {
                 DisplayTotalFeePerAirline(terminal);
