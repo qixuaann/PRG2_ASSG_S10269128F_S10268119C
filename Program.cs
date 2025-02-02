@@ -504,6 +504,38 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
                     Console.WriteLine($"Boarding Gate: {assignedGate}");
 
                 }
+                else if (modifyChoice == 3)
+                {
+                    Console.Write("Enter new Special Request Code: ");
+                    string newCode = Console.ReadLine();
+
+                    Console.WriteLine("Flight updated!");
+                    Flight updatedFlight = flightDict[inputFlight];
+                    Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
+                    Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
+                    Console.WriteLine($"Origin: {updatedFlight.Origin}");
+                    Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                    Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                    Console.WriteLine($"Status: {updatedFlight.Status}");
+                    Console.WriteLine($"Special Request Code: {newCode}");
+                    Console.WriteLine($"Boarding Gate: {assignedGate}");
+                }
+                else if (modifyChoice == 4)
+                {
+                    Console.Write("Enter new boarding gate: ");
+                    string newAssignedgate = Console.ReadLine();
+
+                    Console.WriteLine("Flight updated!");
+                    Flight updatedFlight = flightDict[inputFlight];
+                    Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
+                    Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
+                    Console.WriteLine($"Origin: {updatedFlight.Origin}");
+                    Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                    Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                    Console.WriteLine($"Status: {updatedFlight.Status}");
+                    Console.WriteLine($"Special Request Code: {code}");
+                    Console.WriteLine($"Boarding Gate: {newAssignedgate}");
+                }
             }
         else
             {
