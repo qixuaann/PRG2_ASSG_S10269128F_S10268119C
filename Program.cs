@@ -487,9 +487,22 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
                         Console.WriteLine("\nInvalid date format. Flight details not updated.");
                     }
                 }
-                else 
+                else if (modifyChoice == 2)
                 {
-                    Console.WriteLine("Pause here first.");
+                    Console.Write("Enter new status: ");
+                    string newStatus = Console.ReadLine();
+
+                    Console.WriteLine("Flight updated!");
+                    Flight updatedFlight = flightDict[inputFlight];
+                    Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
+                    Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
+                    Console.WriteLine($"Origin: {updatedFlight.Origin}");
+                    Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                    Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                    Console.WriteLine($"Status: {newStatus}");
+                    Console.WriteLine($"Special Request Code: {code}");
+                    Console.WriteLine($"Boarding Gate: {assignedGate}");
+
                 }
             }
         else
