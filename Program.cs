@@ -530,24 +530,29 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
                     Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
                     Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
                     Console.WriteLine($"Origin: {updatedFlight.Origin}");
-                    Console.WriteLine($"Destination: {updatedFlight.Destination}");
-                    Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
-                    Console.WriteLine($"Status: {updatedFlight.Status}");
-                    Console.WriteLine($"Special Request Code: {code}");
-                    Console.WriteLine($"Boarding Gate: {newAssignedgate}");
+                        Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                        Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                        Console.WriteLine($"Status: {updatedFlight.Status}");
+                        Console.WriteLine($"Special Request Code: {code}");
+                        Console.WriteLine($"Boarding Gate: {newAssignedgate}");
+                    }
                 }
-            }
-        else
+            else if (inputChoice == 2)
+                {
+                    flightDict.Remove(inputFlight);
+                    Console.WriteLine($"Flight details for {inputFlight} removed!");
+                }
+            else 
             {
-                Console.WriteLine("Invalid Flight Number.");
+                Console.WriteLine("Invalid Option! Try again.");
             }
+        }
+        else
+        {
+            Console.WriteLine("No flights available for this airline.");
+        }
     }
-    else
-    {
-        Console.WriteLine("No flights available for this airline.");
     }
-}
-}
 
 
 // feature 9 - display scheduled flights in chronological order
