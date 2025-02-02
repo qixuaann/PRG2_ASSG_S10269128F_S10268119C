@@ -3,6 +3,11 @@
     using System.Runtime.CompilerServices;
     using System.Windows.Markup;
 
+    // =======================================
+    // Student Number: S10269128F, S10268119C
+    // Members: Kang Qi Xuan, Joyce Lim 
+    // =======================================
+    
     // dictionary of gates assigned already (for feature 8/9)
     Dictionary<string, string> predefinedGates = new Dictionary<string, string>
     {
