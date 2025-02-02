@@ -30,8 +30,7 @@ public class Airline
         return false;
     }
     
-    // added method for advance feature (b)
-    public double CalculateFlightFees()
+    public double CalculateFees()
     {
         double totalFees = 0;
 
@@ -44,7 +43,6 @@ public class Airline
     }
 
     // added method for advance feature (b)
-
     public double CalculateDiscounts()
     {
         double discounts = 0;
@@ -59,7 +57,7 @@ public class Airline
         // 3% off for >5 flights
         if (flightCount > 5)
         {
-            discounts += 0.03 * CalculateFlightFees();
+            discounts += CalculateFees() * 0.03;
         }
 
         // disc for flights before 11am or after 9pm
@@ -83,9 +81,11 @@ public class Airline
         }
         return discounts;
     }
-    public double CalculateFees()
+
+    // added method for advance feature (b)
+    public double CalculateTotalFees()
     {
-        return CalculateFlightFees() - CalculateDiscounts();
+        return CalculateFees() - CalculateDiscounts();
     }
 
     public bool RemoveFlight(Flight flight)

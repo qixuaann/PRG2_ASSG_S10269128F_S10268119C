@@ -63,9 +63,9 @@ public class Terminal
 
         foreach (var airline in Airlines.Values)
         {
-            double totalFees = airline.CalculateFlightFees(); // 7205
+            double totalFees = airline.CalculateFees(); // 7205
             double totalDiscounts = airline.CalculateDiscounts(); // 28500
-            double finalFees = airline.CalculateFees(); /// 21295
+            double finalFees = airline.CalculateTotalFees(); /// 21295
 
             Console.WriteLine($"Airline: {airline.Name} ({airline.Code})");
             Console.WriteLine($"  Subtotal Fees: ${totalFees}");

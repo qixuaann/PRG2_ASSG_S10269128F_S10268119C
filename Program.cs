@@ -75,7 +75,9 @@ void LoadFlights(string filepath_flight, Dictionary<string, Flight> flightDict, 
             DateTime expectedTime = DateTime.Parse(values[3]);
             string requestCode = values[4];
 
-            Flight flight = new Flight(flightNumber, origin, destination, expectedTime);
+            // added requestCode for advanced feature(b) - joyce
+            Flight flight = new Flight(flightNumber, origin, destination, expectedTime, requestCode);
+
             flightDict.Add(flightNumber, flight);
             requestCodeDict.Add(flightNumber, requestCode);
             
@@ -582,6 +584,7 @@ void DisplayOverallTotals(Terminal terminal)
 
     // double totalDiscounts = airline.CalculateDiscounts();
     // Console.WriteLine($"{totalDiscounts}");
+   
     terminal.PrintAirlineFees();
 
 }

@@ -37,7 +37,7 @@ public class Flight	: IComparable<Flight>
             // arriving 
             fee += 500;
         }
-        else if (Origin == "Singapore (SIN)")
+        if (Origin == "Singapore (SIN)")
         {
             // departing
             fee += 800;
