@@ -362,6 +362,13 @@ void DisplayFullflightdetails(Dictionary<string, Airline> airlineDict, Dictionar
 // ---- end of feature 7 ----
 
 // feature 8 - modify flight details
+Dictionary<string, string> predefinedGates = new Dictionary<string, string>
+{
+    { "SQ 693", "A13" },
+    { "MH 722", "B2" },
+    { "CX 312", "C22" }
+};   
+
 void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<string, Flight> flightDict)
 {
     Console.WriteLine("=============================================");
@@ -414,13 +421,6 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
         if (flightDict.ContainsKey(inputFlight))
         {
             Flight flight = flightDict[inputFlight];
-
-            Dictionary<string, string> predefinedGates = new Dictionary<string, string>
-            {
-                { "SQ 693", "A13" },
-                { "MH 722", "B2" },
-                { "CX 312", "C22" }
-            };   
                         
             string assignedGate;
             if (predefinedGates.ContainsKey(flight.FlightNumber))
@@ -508,17 +508,25 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
                 {
                     Console.Write("Enter new Special Request Code: ");
                     string newCode = Console.ReadLine();
-
-                    Console.WriteLine("Flight updated!");
-                    Flight updatedFlight = flightDict[inputFlight];
-                    Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
-                    Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
-                    Console.WriteLine($"Origin: {updatedFlight.Origin}");
-                    Console.WriteLine($"Destination: {updatedFlight.Destination}");
-                    Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
-                    Console.WriteLine($"Status: {updatedFlight.Status}");
-                    Console.WriteLine($"Special Request Code: {newCode}");
-                    Console.WriteLine($"Boarding Gate: {assignedGate}");
+                    
+                    if (IsValidRequestCode(newCode))
+                    {
+                        Console.WriteLine("Flight updated!");
+                        Flight updatedFlight = flightDict[inputFlight];
+                        Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
+                        Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
+                        Console.WriteLine($"Origin: {updatedFlight.Origin}");
+                        Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                        Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                        Console.WriteLine($"Status: {updatedFlight.Status}");
+                        Console.WriteLine($"Special Request Code: {newCode}");
+                        Console.WriteLine($"Boarding Gate: {assignedGate}");
+                        requestCodeDict[flight.FlightNumber] = newCode;
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Invalid Special Request Code! Try again.");
+                    }
                 }
                 else if (modifyChoice == 4)
                 {
@@ -530,13 +538,14 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
                     Console.WriteLine($"Flight Number: {updatedFlight.FlightNumber}");
                     Console.WriteLine($"Airline Name: {airlineDict[updatedFlight.FlightNumber.Substring(0, 2)].Name}");
                     Console.WriteLine($"Origin: {updatedFlight.Origin}");
-                        Console.WriteLine($"Destination: {updatedFlight.Destination}");
-                        Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
-                        Console.WriteLine($"Status: {updatedFlight.Status}");
-                        Console.WriteLine($"Special Request Code: {code}");
-                        Console.WriteLine($"Boarding Gate: {newAssignedgate}");
-                    }
+                    Console.WriteLine($"Destination: {updatedFlight.Destination}");
+                    Console.WriteLine($"Expected Departure/Arrival Time: {updatedFlight.ExpectedTime}");
+                    Console.WriteLine($"Status: {updatedFlight.Status}");
+                    Console.WriteLine($"Special Request Code: {code}");
+                    Console.WriteLine($"Boarding Gate: {newAssignedgate}");
+                    predefinedGates[$"{inputFlight}"] = newAssignedgate;
                 }
+            }
             else if (inputChoice == 2)
                 {
                     flightDict.Remove(inputFlight);
@@ -549,11 +558,12 @@ void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<str
         }
         else
         {
-            Console.WriteLine("No flights available for this airline.");
+            Console.WriteLine("Invalid flight number! Try again.");
         }
     }
-    }
+}
 
+// --- end of feature 8 ---
 
 // feature 9 - display scheduled flights in chronological order
 // with boarding gates assignments where applicable 
@@ -572,13 +582,6 @@ void DisplayScheduledFlights(Terminal terminal, Dictionary<string, Flight> fligh
 
     List<Flight> flightList = flightDict.Values.ToList();
     flightList.Sort();
-    
-    Dictionary<string, string> predefinedGates = new Dictionary<string, string>
-    {
-        { "SQ 693", "A13" },
-        { "MH 722", "B2" },
-        { "CX 312", "C22" }
-    };   
 
     Console.WriteLine("{0,-16} {1,-20} {2,-21} {3,-21} {4,-35} {5,-18} {6,-25} {7,-25}",
                         "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time", "Request Code", "Status", "Boarding Gate");
