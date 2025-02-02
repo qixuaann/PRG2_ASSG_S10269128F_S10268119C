@@ -3,6 +3,14 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Windows.Markup;
 
+// dictionary of gates assigned already (for feature 8/9)
+Dictionary<string, string> predefinedGates = new Dictionary<string, string>
+{
+    { "SQ 693", "A13" },
+    { "MH 722", "B2" },
+    { "CX 312", "C22" }
+};   
+
 // start of feature 1
 // load the airlines.csv file
 string filepath_airline = "C:\\Users\\Qi Xuan\\PRG2_ASSG_S10269128F_S10268119C\\airlines.csv";
@@ -364,13 +372,6 @@ void DisplayFullflightdetails(Dictionary<string, Airline> airlineDict, Dictionar
 // ---- end of feature 7 ----
 
 // feature 8 - modify flight details
-Dictionary<string, string> predefinedGates = new Dictionary<string, string>
-{
-    { "SQ 693", "A13" },
-    { "MH 722", "B2" },
-    { "CX 312", "C22" }
-};   
-
 void Modifyflightdetails(Dictionary<string, Airline> airlineDict, Dictionary<string, Flight> flightDict)
 {
     Console.WriteLine("=============================================");
